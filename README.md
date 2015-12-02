@@ -1,2 +1,2 @@
 # micronaet-purchase
-ODOO v.8 module for manage purchase cases (get from Micronaet/micronaet-purchase.git)
+ODOO vers.8 module for manage purchase cases (get from Github Micronaet/micronaet-purchase.git)
