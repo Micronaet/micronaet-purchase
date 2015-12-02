@@ -35,7 +35,8 @@
     'demo': [],
     'data': [
         #'security/ir.model.access.csv',    
-        'report/label_report.xml',
+        'wizard/report_wizard.xml',
+        'report/label_report.xml',        
         ],
     'active': False,
     'installable': True,

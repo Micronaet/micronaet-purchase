@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<openerp>
+  <data>
+
+    <!--purchase.order.label.report.wizard-->
+    <record id="purchase_label_report_wizard_form" model="ir.ui.view">
+        <field name="name">purchase.order.label.report.wizard.form</field>
+        <field name="model">purchase.order.label.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Report" version="7.0">
+                <sheet>
+                   <group col='4'>
+                      <field name="label_1"/>
+                      <field name="label_2"/>
+                      <field name="label_3"/>
+                      <field name="label_4"/>
+                      <field name="label_5"/>
+                      <field name="label_6"/>
+                      <button string='Print' name='print_report' type='object' icon='STOCK_APPLY'/>
+                      <button string="Cancel" special="cancel" icon='STOCK_CANCEL'/>
+                   </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_purchase_label_report_wizard_form" model="ir.actions.act_window">
+            <field name="name">Label report wizard</field>
+            <field name="res_model">purchase.order.label.report.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="purchase_label_report_wizard_form"/>
+            <field name="target">new</field>
+    </record>
+
+    <act_window
+        id="act_purchase_label_report_wizard_form"
+        name="Purchase label wizard"
+        res_model="purchase.order.label.report.wizard"
+        src_model="purchase.order"
+        view_mode="form"
+        view_type="form"
+        target="new"
+        />
+    
+  </data>
+</openerp>
