@@ -3,7 +3,7 @@
   <data>
 
     <!--purchase.order.label.report.wizard-->
-    <record id="purchase_label_report_wizard_form" model="ir.ui.view">
+    <record id="view_purchase_label_report_wizard_form" model="ir.ui.view">
         <field name="name">purchase.order.label.report.wizard.form</field>
         <field name="model">purchase.order.label.report.wizard</field>
         <field name="arch" type="xml">
@@ -29,7 +29,7 @@
             <field name="res_model">purchase.order.label.report.wizard</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
-            <field name="view_id" ref="purchase_label_report_wizard_form"/>
+            <field name="view_id" ref="view_purchase_label_report_wizard_form"/>
             <field name="target">new</field>
     </record>
 

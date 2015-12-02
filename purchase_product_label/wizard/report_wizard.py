@@ -41,7 +41,7 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 
 _logger = logging.getLogger(__name__)
 
-class PurchaseOrderLabelReportWizard(orm.Transient):
+class PurchaseOrderLabelReportWizard(orm.TransientModel):
     ''' Form to select type of print
     '''
     _name = 'purchase.order.label.report.wizard'
@@ -85,6 +85,5 @@ class PurchaseOrderLabelReportWizard(orm.Transient):
             #'res_id': context.get('active_id', False),
             #'context': context, #{'active_id':context.get('active_id', False), 'active_ids': context.get('active_ids', [])},#context,
         }
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
