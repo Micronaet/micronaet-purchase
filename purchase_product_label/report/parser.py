@@ -28,7 +28,7 @@ class Parser(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(Parser, self).__init__(cr, uid, name, context)
         self.localcontext.update({
-            'get_objects': self.get_objects,
+            #'get_objects': self.get_objects,
             # TODO
             
         })
