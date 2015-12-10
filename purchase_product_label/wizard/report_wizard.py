@@ -48,9 +48,9 @@ class PurchaseOrderLabelReportWizard(orm.TransientModel):
     _description = 'Label report wizard'
 
     _columns = {
-        'label_1': fields.boolean('Label 1'),
-        'label_2': fields.boolean('Label 2'),
-        'label_3': fields.boolean('Label 3'),
+        'label_1': fields.boolean('Hangtag'),
+        'label_2': fields.boolean('Print for the box'),
+        'label_3': fields.boolean('Warranty label'),
         'label_4': fields.boolean('Label 4'),
         'label_5': fields.boolean('Label 5'),
         'label_6': fields.boolean('Label 6'),
