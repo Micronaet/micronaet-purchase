@@ -13,9 +13,6 @@
                       <field name="label_1"/>
                       <field name="label_2"/>
                       <field name="label_3"/>
-                      <!--<field name="label_4"/>
-                      <field name="label_5"/>
-                      <field name="label_6"/>-->
                       <button string='Print' name='print_report' type='object' icon='STOCK_APPLY'/>
                       <button string="Cancel" special="cancel" icon='STOCK_CANCEL'/>
                    </group>

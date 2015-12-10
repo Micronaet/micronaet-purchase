@@ -28,10 +28,21 @@ class Parser(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(Parser, self).__init__(cr, uid, name, context)
         self.localcontext.update({
-            #'get_objects': self.get_objects,
-            # TODO
-            
+            'get_objects': self.get_objects,
         })
+    def get_objects(self, data):
+        ''' Return browse obj
+        ''' 
+        purchase_pool = self.pool.get('purchase.order')   
+        purchase_id = data.get('purchase_id', False)
+        if purchase_id:
+            return purchase_pool.browse(self.cr, self.uid, purchase_id)            
+        else:
+            return self.localcontext['o']
+            
+       
+        
+    
         
 
 

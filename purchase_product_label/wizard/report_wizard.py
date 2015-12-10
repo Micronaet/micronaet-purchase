@@ -51,32 +51,25 @@ class PurchaseOrderLabelReportWizard(orm.TransientModel):
         'label_1': fields.boolean('Hangtag'),
         'label_2': fields.boolean('Print for the box'),
         'label_3': fields.boolean('Warranty label'),
-        'label_4': fields.boolean('Label 4'),
-        'label_5': fields.boolean('Label 5'),
-        'label_6': fields.boolean('Label 6'),
         }
 
     _defaults = {
         'label_1': lambda *x: True,
         'label_2': lambda *x: True,
         'label_3': lambda *x: True,
-        'label_4': lambda *x: True,
-        'label_5': lambda *x: True,
-        'label_6': lambda *x: True,
         }
 
     def print_report(self, cr, uid, ids, context=None):
         ''' Print report passing parameter dictionary
         '''
+        context = context or {}
         wiz_proxy = self.browse(cr, uid, ids, context=context)[0]
         datas = {}
         datas['label_1'] = wiz_proxy.label_1
         datas['label_2'] = wiz_proxy.label_2
         datas['label_3'] = wiz_proxy.label_3
-        datas['label_4'] = wiz_proxy.label_4
-        datas['label_5'] = wiz_proxy.label_5
-        datas['label_6'] = wiz_proxy.label_6
-
+        datas['purchase_id'] = context.get('active_id', False)
+        
         return {
             'model': 'purchase.order',
             'type': 'ir.actions.report.xml',
