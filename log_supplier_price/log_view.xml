@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="product_supplierinfo_form_history_view">
+            <field name="name">product.supplierinfo.history.form</field>
+            <field name="model">product.supplierinfo</field>
+            <field name="inherit_id" ref="product.product_supplierinfo_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree[@string='Pricelist']" position="after">
+                    <button name="open_history_price" string="History" type="object" />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>
+
