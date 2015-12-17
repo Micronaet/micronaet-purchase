@@ -1,0 +1,98 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* fast_check_supplier_price
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-12-17 14:58+0000\n"
+"PO-Revision-Date: 2015-12-17 16:03+0100\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"Language: it\n"
+"X-Generator: Poedit 1.6.10\n"
+
+#. module: fast_check_supplier_price
+#: model:ir.actions.act_window,name:fast_check_supplier_price.mrp_component_costs_form_action
+#: view:pricelist.partnerinfo:fast_check_supplier_price.mrp_component_costs_form
+msgid "Check cost"
+msgstr "Controllo costi"
+
+#. module: fast_check_supplier_price
+#: field:pricelist.partnerinfo,product_code:0
+msgid "Company code"
+msgstr "Codice nostro"
+
+#. module: fast_check_supplier_price
+#: view:pricelist.partnerinfo:fast_check_supplier_price.mrp_component_costs_tree
+msgid "Controllo costi"
+msgstr "Controllo costi"
+
+#. module: fast_check_supplier_price
+#: model:ir.ui.menu,name:fast_check_supplier_price.mrp_component_costs_form_menu
+msgid "Cost check"
+msgstr "Controllo costi"
+
+#. module: fast_check_supplier_price
+#: view:pricelist.partnerinfo:fast_check_supplier_price.mrp_component_costs_search
+msgid "Group By"
+msgstr "Raggruppa per"
+
+#. module: fast_check_supplier_price
+#: view:pricelist.partnerinfo:fast_check_supplier_price.mrp_component_costs_tree
+msgid "History"
+msgstr "Storico"
+
+#. module: fast_check_supplier_price
+#: view:pricelist.partnerinfo:fast_check_supplier_price.mrp_component_costs_search
+msgid "Min q."
+msgstr "Min q."
+
+#. module: fast_check_supplier_price
+#: view:pricelist.partnerinfo:fast_check_supplier_price.mrp_component_costs_tree
+msgid "Pricelist"
+msgstr "Listino"
+
+#. module: fast_check_supplier_price
+#: view:pricelist.partnerinfo:fast_check_supplier_price.mrp_component_costs_search
+msgid "Product"
+msgstr "Prodotto"
+
+#. module: fast_check_supplier_price
+#: view:pricelist.partnerinfo:fast_check_supplier_price.mrp_component_costs_search
+msgid "Quotation date"
+msgstr "Data quotazione"
+
+#. module: fast_check_supplier_price
+#: view:pricelist.partnerinfo:fast_check_supplier_price.mrp_component_costs_search
+msgid "Search"
+msgstr "Ricerca"
+
+#. module: fast_check_supplier_price
+#: view:pricelist.partnerinfo:fast_check_supplier_price.mrp_component_costs_search
+msgid "Supplier"
+msgstr "Fornitore"
+
+#. module: fast_check_supplier_price
+#: view:pricelist.partnerinfo:fast_check_supplier_price.mrp_component_costs_search
+msgid "UOM"
+msgstr "UM"
+
+#. module: fast_check_supplier_price
+#: model:ir.actions.act_window,help:fast_check_supplier_price.mrp_component_costs_form_action
+msgid ""
+"Videata che facilita il controllo dei prezzi componenti all'arrivo delle "
+"fatture"
+msgstr ""
+"Videata che facilita il controllo dei prezzi componenti all'arrivo delle "
+"fatture"
+
+#. module: fast_check_supplier_price
+#: view:pricelist.partnerinfo:fast_check_supplier_price.mrp_component_costs_search
+msgid "Write date"
+msgstr "Data modifica"
