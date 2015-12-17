@@ -54,10 +54,18 @@ class PricelistPartnerinfo(orm.Model):
             @param ids: list of record ids to be update
             @param vals: dict of new values to be set
             @param context: context arguments, like lang, time zone
+                > without_history: parameter
             
-            @return: True on success, False otherwise
+            @return: True on success, False otherwise            
         """
-        if 'price' in vals and len(ids) == 1: # TODO only for one correct?
+        if type(ids) == int:
+            ids = [ids]
+
+        context = context or {}
+        active_model = context.get('active_model', False)
+
+        # TODO only for one correct?
+        if active_model != 'syncro.migration.wizard' and 'price' in vals and len(ids) == 1: 
             # Browse current record:
             current_proxy = self.browse(cr, uid, ids, context=context)[0]
             # Save history:
