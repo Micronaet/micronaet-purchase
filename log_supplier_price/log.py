@@ -113,7 +113,10 @@ class PricelistPartnerinfoHistory(orm.Model):
         'price': fields.float('Price', digits=(8, 6)), # more decimal history
         'pricelist_id': fields.many2one(
             'pricelist.partnerinfo', 'Pricelist', ondelete='cascade'),
+        
+        # Show database fields:    
         'create_uid': fields.many2one(
             'res.users', 'History user'),
+        'create_date': fields.date('Created'),
         }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

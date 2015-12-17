@@ -40,13 +40,15 @@
                 <field name="product_id" readonly="1"/>
                 <field name="uom_id" readonly="1"/>
                 <field name="supplier_id" readonly="1"/>
+                <field name="suppinfo_id" readonly="1" string="Pricelist"/>
                 <field name="product_supp_code" readonly="1"/>
                 <field name="product_supp_name" readonly="1"/>
-                <field name="min_quantity" readonly="1"/>
                 <field name="write_date" readonly="1"/>
                 <field name="price"/>
                 <field name="date_quotation"/><!-- attrs="{'required': [('price', '!=', False)]}"-->
+                <field name="min_quantity" />
                 <!--<field name="has_bom" invisible="1" />-->
+                <button name="open_history_price" string="History" type="object" />
             </tree>
         </field>
     </record>
