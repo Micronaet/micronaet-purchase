@@ -39,9 +39,39 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 _logger = logging.getLogger(__name__)
 
 class PricelistPartnerinfo(orm.Model):
-    ''' Add button event
+    ''' Add button event and override event
     '''
     _inherit = 'pricelist.partnerinfo'
+
+    # --------------------------
+    # Overide event for history:
+    # --------------------------
+    def write(self, cr, uid, ids, vals, context=None):
+        """ Update redord(s) comes in {ids}, with new value comes as {vals}
+            return True on success, False otherwise
+            @param cr: cursor to database
+            @param uid: id of current user
+            @param ids: list of record ids to be update
+            @param vals: dict of new values to be set
+            @param context: context arguments, like lang, time zone
+            
+            @return: True on success, False otherwise
+        """
+        if 'price' in vals and len(ids) == 1: # TODO only for one correct?
+            # Browse current record:
+            current_proxy = self.browse(cr, uid, ids, context=context)[0]
+            # Save history:
+            history_pool = self.pool.get('pricelist.partnerinfo.history')
+            history_pool.create(cr, uid, {
+                'date_quotation': current_proxy.date_quotation,
+                'min_quantity': current_proxy.min_quantity,
+                'price': current_proxy.price,
+                'pricelist_id': current_proxy.id,     
+                }, context=context)
+
+        # Write operation:        
+        return super(PricelistPartnerinfo, self).write(
+            cr, uid, ids, vals, context=context)
     
     # -------------
     # Button event:
@@ -54,10 +84,11 @@ class PricelistPartnerinfo(orm.Model):
         #    ('name', '=', 'Create production order') 
         #    ], context=context)
         
+        # TODO raise error if not present
         return {
             'type': 'ir.actions.act_window',
             'name': 'History price',
-            'res_model': 'pricelist.partnerinfo',
+            'res_model': 'pricelist.partnerinfo.history',
             #'res_id': ids[0],
             'view_type': 'form',
             'view_mode': 'tree,form',
@@ -66,7 +97,7 @@ class PricelistPartnerinfo(orm.Model):
             #'nodestroy': True,
             'domain': [('pricelist_id', '=', ids[0])],
             }
-        
+
 class PricelistPartnerinfoHistory(orm.Model):
     ''' Model name: PricelistPartnerinfoHistory
     '''
@@ -81,6 +112,8 @@ class PricelistPartnerinfoHistory(orm.Model):
         'min_quantity': fields.integer('Min Q.'),
         'price': fields.float('Price'),
         'pricelist_id': fields.many2one(
-            'pricelist.partnerinfo', 'Pricelist'),    
+            'pricelist.partnerinfo', 'Pricelist'),
+        'create_uid': fields.many2one(
+            'res.users', 'History user'),
         }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

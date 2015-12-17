@@ -11,6 +11,32 @@
                 </xpath>
             </field>
         </record>
+
+        <!--pricelist.partnerinfo.history-->
+        <record model="ir.ui.view" id="view_history_price_tree">
+            <field name="name">pricelist.partnerinfo.history.tree</field>
+            <field name="model">pricelist.partnerinfo.history</field>
+            <field name="arch" type="xml">
+                <tree string="History" editable="bottom">
+                    <field name="write_uid" readonly="1"/>
+                    <field name="date_quotation" readonly="1"/>
+                    <field name="price" readonly="1" />
+                    <field name="min_quantity" readonly="1" />
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_history_price_form">
+            <field name="name">pricelist.partnerinfo.history.form</field>
+            <field name="model">pricelist.partnerinfo.history</field>
+            <field name="arch" type="xml">
+                <tree string="History" editable="bottom">
+                    <field name="write_uid" readonly="1"/>
+                    <field name="date_quotation" readonly="1"/>
+                    <field name="price" readonly="1" />
+                    <field name="min_quantity" readonly="1" />
+                </tree>
+            </field>
+        </record>
     </data>
 </openerp>
 

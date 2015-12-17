@@ -45,7 +45,7 @@
                 <field name="min_quantity" readonly="1"/>
                 <field name="write_date" readonly="1"/>
                 <field name="price"/>
-                <field name="date_quotation"/> <!--REMOVE?-->
+                <field name="date_quotation"/><!-- attrs="{'required': [('price', '!=', False)]}"-->
                 <!--<field name="has_bom" invisible="1" />-->
             </tree>
         </field>
