@@ -110,9 +110,9 @@ class PricelistPartnerinfoHistory(orm.Model):
     _columns = {
         'date_quotation': fields.date('Date quotation'),
         'min_quantity': fields.integer('Min Q.'),
-        'price': fields.float('Price'),
+        'price': fields.float('Price', digits=(8, 6)), # more decimal history
         'pricelist_id': fields.many2one(
-            'pricelist.partnerinfo', 'Pricelist'),
+            'pricelist.partnerinfo', 'Pricelist', ondelete='cascade'),
         'create_uid': fields.many2one(
             'res.users', 'History user'),
         }
