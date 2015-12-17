@@ -62,10 +62,11 @@ class PricelistPartnerinfo(orm.Model):
             ids = [ids]
 
         context = context or {}
-        active_model = context.get('active_model', False)
+        #active_model = context.get('active_model', False)
+        without_history = context.get('without_history', False)
 
         # TODO only for one correct?
-        if active_model != 'syncro.migration.wizard' and 'price' in vals and len(ids) == 1: 
+        if not without_history and 'price' in vals and len(ids) == 1: 
             # Browse current record:
             current_proxy = self.browse(cr, uid, ids, context=context)[0]
             # Save history:
