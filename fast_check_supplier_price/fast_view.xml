@@ -38,14 +38,14 @@
             <!--<tree string="Controllo costi" colors="blue:has_bom==True">-->
             <tree string="Controllo costi" editable="bottom">
                 <field name="product_id" readonly="1"/>
+                <field name="uom_id" readonly="1"/>
                 <field name="supplier_id" readonly="1"/>
                 <field name="product_supp_code" readonly="1"/>
                 <field name="product_supp_name" readonly="1"/>
-                <field name="price"/>
-                <field name="write_date" readonly="1"/>
-                <field name="date_quotation"/> <!--REMOVE?-->
                 <field name="min_quantity" readonly="1"/>
-                <field name="uom_id" readonly="1"/>
+                <field name="write_date" readonly="1"/>
+                <field name="price"/>
+                <field name="date_quotation"/> <!--REMOVE?-->
                 <!--<field name="has_bom" invisible="1" />-->
             </tree>
         </field>
@@ -84,15 +84,10 @@
         <field name="help">Videata che facilita il controllo dei prezzi componenti all'arrivo delle fatture</field>
     </record>
 
-    <menuitem 
-        id="menu_products_components" 
-        parent="mrp.menu_mrp_bom" 
-        sequence="0" 
-        name="Manage components" />
     <menuitem
         action="mrp_component_costs_form_action"
         id="mrp_component_costs_form_menu"        
-        parent="menu_products_components"
+        parent="mrp.menu_mrp_bom"
         sequence="20"
         name="Cost check"
         /> <!--groups="base.group_extended"-->

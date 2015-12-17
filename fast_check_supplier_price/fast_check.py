@@ -68,35 +68,29 @@ class PricelistPartnerinfoExtraFields(orm.Model):
         'date_quotation': fields.date('Date quotation'), # TODO delete?
         'write_date': fields.datetime('Write date', readonly=True),
         
-        # TODO change store:
+        # TODO change store?:
         'supplier_id': fields.function(
             _get_parent_information, method=True, 
             type='many2one', string='Supplier', relation='res.partner',
-            store=True, multi=True), # TODO change store
-            
-        # XXX before was product_id not product_tmpl_id!!    
-        'product_id': fields.function(
-            _get_parent_information, method=True, relation='product.template',
-            type='many2one', string='Product', store=True, multi=True),
+            store=True, multi=True),
+        'product_id': fields.function( # XXX template
+            _get_parent_information, method=True, store=True, multi=True,
+            type='many2one', string='Product', relation='product.template'),
         'uom_id': fields.function(
-            _get_parent_information, method=True, relation='product.uom',
-            type='many2one', string='UOM', store=True, multi=True),
+            _get_parent_information, method=True, store=True, multi=True,
+            type='many2one', string='UOM', relation='product.uom'),
 
         'product_supp_name': fields.function(
-            _get_parent_information, method=True, 
-            type='char', size=128, string='Supplier description', 
-            store=True, multi=True),
+            _get_parent_information, method=True, store=True, multi=True,
+            type='char', size=128, string='Supplier description'),
         'product_supp_code': fields.function(
-            _get_parent_information, method=True, 
-            type='char', size=64, string='Supplier code', 
-            store=True, multi=True),
+            _get_parent_information, method=True, store=True, multi=True,
+            type='char', size=64, string='Supplier code'),
         'product_name': fields.function(
-            _get_parent_information, method=True, 
-            type='char', size=80, string='Company product', 
-            store=True, multi=True),
+            _get_parent_information, method=True, store=True, multi=True
+            type='char', size=80, string='Company product'),
         'product_code': fields.function(
-            _get_parent_information, method=True, 
-            type='char', size=20, string='Company code', 
-            store=True, multi=True),
+            _get_parent_information, method=True, store=True, multi=True
+            type='char', size=20, string='Company code'),
         }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
