@@ -67,7 +67,6 @@ class PricelistPartnerinfo(orm.Model):
             'domain': [('pricelist_id', '=', ids[0])],
             }
         
-        
 class PricelistPartnerinfoHistory(orm.Model):
     ''' Model name: PricelistPartnerinfoHistory
     '''
@@ -82,6 +81,6 @@ class PricelistPartnerinfoHistory(orm.Model):
         'min_quantity': fields.integer('Min Q.'),
         'price': fields.float('Price'),
         'pricelist_id': fields.many2one(
-            'pricelist.supplierinfo', 'Pricelist'),    
+            'pricelist.partnerinfo', 'Pricelist'),    
         }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

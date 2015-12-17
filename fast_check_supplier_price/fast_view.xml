@@ -1,8 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
-    <data>
-    
-    <!-- COST CONTROL: -->
+    <data>    
+   <!-- COST CONTROL: -->
    <!-- Search -->
     <record id='mrp_component_costs_search' model='ir.ui.view'>
         <field name='name'>Check cost search</field>
@@ -11,6 +10,7 @@
             <search string="Search">
                 <field name="supplier_id"/>
                 <field name="product_id"/>
+                <field name="uom_id"/>
                 <field name="product_supp_code"/>
                 <field name="product_supp_name"/>
                 <field name="min_quantity"/>
@@ -20,8 +20,9 @@
                     <filter name="group_partner" string="Supplier" context="{'group_by': 'supplier_id'}"/>
                     <filter name="group_product" string="Product" context="{'group_by': 'product_id'}"/>
                     <filter name="group_write" string="Write date" context="{'group_by': 'write_date'}"/>
-                    <filter name="group_date" string="Quotation date" context="{'group_by': 'quotation_date'}"/>
+                    <filter name="group_date" string="Quotation date" context="{'group_by': 'date_quotation'}"/>
                     <filter name="group_min" string="Min q." context="{'group_by': 'min_quantity'}"/>
+                    <filter name="group_uom" string="UOM" context="{'group_by': 'uom_id'}"/>
                 </group>                
             </search>
         </field>
@@ -84,14 +85,14 @@
     </record>
 
     <menuitem 
-        id="menu_products_componenti" 
+        id="menu_products_components" 
         parent="mrp.menu_mrp_bom" 
         sequence="0" 
         name="Manage components" />
     <menuitem
         action="mrp_component_costs_form_action"
         id="mrp_component_costs_form_menu"        
-        parent="menu_products_bom_componenti"
+        parent="menu_products_components"
         sequence="20"
         name="Cost check"
         /> <!--groups="base.group_extended"-->
