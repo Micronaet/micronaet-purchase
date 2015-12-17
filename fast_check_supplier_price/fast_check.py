@@ -87,10 +87,10 @@ class PricelistPartnerinfoExtraFields(orm.Model):
             _get_parent_information, method=True, store=True, multi=True,
             type='char', size=64, string='Supplier code'),
         'product_name': fields.function(
-            _get_parent_information, method=True, store=True, multi=True
+            _get_parent_information, method=True, store=True, multi=True,
             type='char', size=80, string='Company product'),
         'product_code': fields.function(
-            _get_parent_information, method=True, store=True, multi=True
+            _get_parent_information, method=True, store=True, multi=True,
             type='char', size=20, string='Company code'),
         }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
