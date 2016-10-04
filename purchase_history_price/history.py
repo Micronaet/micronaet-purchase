@@ -95,7 +95,7 @@ class PurchaseOrder(orm.Model):
             seller_id = False
             price_id = False
             partner_id = order_proxy.partner_id.id
-            for suppinfo in product.seller_ids
+            for suppinfo in product.seller_ids:
                 if suppinfo.name.id == partner_id:
                     suppinfo_id = suppinfo.id # save seller supplierinfo id
                     for pl in suppinfo.pricelist_ids:
@@ -105,25 +105,26 @@ class PurchaseOrder(orm.Model):
             # ---------------------
             # Create if not present
             # ---------------------
+            price = line.subtotal
             if not seller_id:    
                 suppinfo_id = suppinfo_pool.create(cr, uid, {
                     'name': partner_id,
                     'product_id': product.id,
                     'sequence': 10,
-                    'min_qty', 1.0,
-                    'delay': 1
-                    'product_uom', product.uom_id.id,                    
+                    'min_qty': 1.0,
+                    'delay': 1,
+                    'product_uom': product.uom_id.id,                    
                     }, context=context)
             
             if price_id:
                 pricelist_pool.write(cr, uid, price_id, {
-                    'price': ,
+                    'price': price,
                     #'min_quantity',
                     #'partner_id': seller_id, 
                     }, context=context)
             else:        
                 pricelist_pool.create(cr, uid, {
-                    'price': ,
+                    'price': price,
                     'min_quantity': 1.0,
                     'suppinfo_id': suppinfo_id, 
                     }, context=context)
