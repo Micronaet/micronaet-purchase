@@ -56,6 +56,20 @@ class PurchaseOrder(orm.Model):
     """    
     _inherit = 'purchase.order'
     
+    # Override price when confirmed:
+    def wkf_confirm_order(self, cr, uid, ids, context=None):
+        ''' Before confirm history the price
+        '''
+        import pdb; pdb.set_trace()
+        # History the price:
+        self._force_price_product_order(cr, uid, ids, context=context)
+        
+        # Continue confirm of order
+        return super(PurchaseOrder, self).wkf_confirm_order(
+            cr, uid, ids, context=context)
+    
+        
+    # Utility:
     def _force_price_product_order(self, cr, uid, ids, context=None):
         ''' Force procedure for update price in order
         '''
