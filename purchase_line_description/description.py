@@ -56,24 +56,30 @@ class PurchaseOrderLine(orm.Model):
             fiscal_position_id=fiscal_position_id, date_planned=date_planned, 
             name=name, price_unit=price_unit, state=state, context=context)   
         
-        line_proxy = self.browse(cr, uid, ids, context=context)[0]
-        partner_id = line_proxy.partner_id.id
-        product = line.product_id # readability
+        if not product_id:
+            return res
+        
+        product_pool = self.pool.get('product.product')
+        product_proxy = product_pool.browse(cr, uid, product_id, context=context)
 
-        for suppinfo in line_proxy.product_id.seller_ids:
+        supp_name = ''
+        for suppinfo in product_proxy.seller_ids:
             if suppinfo.name.id == partner_id:
-                supp_name = '%s%s' % (
-                    '[%s]' % suppinfo.product_code \
+                supp_name = '\n%s%s' % (
+                    '[%s] ' % suppinfo.product_code \
                         if suppinfo.product_code else '',
                     suppinfo.product_name or '',
                     )
                     
-        name = '%s%s\n%s' % (
-            '[%s]' % product.default_code if product.default_code else '',
-            product.name or '',
+        name = '%s%s%s' % (
+            '[%s] ' % product_proxy.default_code if \
+                product_proxy.default_code else '',
+            product_proxy.name or '',
             supp_name,
             )
-        import pdb; pdb.set_trace()    
+        if 'value' not in res:
+            res['value'] = {}
+        res['value']['name'] = name
         return res    
        
             
