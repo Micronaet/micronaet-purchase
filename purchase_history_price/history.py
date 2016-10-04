@@ -44,7 +44,7 @@ class ProductProduct(orm.Model):
     _inherit = 'product.product'
     
     _columns = {
-        'history_price': fields.boolean('Force price'),
+        'history_price': fields.boolean('History price'),
         }
         
     _defaults = {
@@ -60,9 +60,8 @@ class PurchaseOrder(orm.Model):
     def wkf_confirm_order(self, cr, uid, ids, context=None):
         ''' Before confirm history the price
         '''
-        import pdb; pdb.set_trace()
         # History the price:
-        self._force_price_product_order(cr, uid, ids, context=context)
+        self.force_price_product_order(cr, uid, ids, context=context)
         
         # Continue confirm of order
         return super(PurchaseOrder, self).wkf_confirm_order(
@@ -70,7 +69,7 @@ class PurchaseOrder(orm.Model):
     
         
     # Utility:
-    def _force_price_product_order(self, cr, uid, ids, context=None):
+    def force_price_product_order(self, cr, uid, ids, context=None):
         ''' Force procedure for update price in order
         '''
         assert len(ids) == 1, 'Works only with one record a time'
@@ -83,8 +82,8 @@ class PurchaseOrder(orm.Model):
         # No history for this order:
         if not order_proxy.history_price:
             return True
-            
-        for line in order.order_line:            
+        
+        for line in order_proxy.order_line:            
             # -----------------------------------------------------------------
             # Check supplier presence:
             # -----------------------------------------------------------------
@@ -92,7 +91,7 @@ class PurchaseOrder(orm.Model):
             if not product.history_price:
                 return True # no history for this product
             
-            seller_id = False
+            suppinfo_id = False
             price_id = False
             partner_id = order_proxy.partner_id.id
             for suppinfo in product.seller_ids:
@@ -105,11 +104,11 @@ class PurchaseOrder(orm.Model):
             # ---------------------
             # Create if not present
             # ---------------------
-            price = line.subtotal
-            if not seller_id:    
+            price = line.price_unit
+            if not suppinfo_id:    
                 suppinfo_id = suppinfo_pool.create(cr, uid, {
                     'name': partner_id,
-                    'product_id': product.id,
+                    'product_tmpl_id': product.product_tmpl_id.id,
                     'sequence': 10,
                     'min_qty': 1.0,
                     'delay': 1,
@@ -131,7 +130,7 @@ class PurchaseOrder(orm.Model):
         return True
     
     _columns = {
-        'history_price': fields.boolean('Force price'),
+        'history_price': fields.boolean('History price'),
         }
         
     _defaults = {
