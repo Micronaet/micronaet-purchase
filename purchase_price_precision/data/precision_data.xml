@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+   <data>
+        <record id="decimal_precision_product_purchase_price" model="decimal.precision">
+            <field name="name">Product Purchase Price</field>
+            <field name="digits" eval="4" />
+        </record>
+   </data>
+</openerp>
