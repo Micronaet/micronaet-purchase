@@ -71,9 +71,9 @@ class PurchaseOrderLine(orm.Model):
                     suppinfo.product_name or '',
                     )
                     
-        name = '%s%s%s' % (
-            '[%s] ' % product_proxy.default_code if \
-                product_proxy.default_code else '',
+        name = '%s%s' % (
+            #'[%s] ' % product_proxy.default_code if \
+            #    product_proxy.default_code else '',
             product_proxy.name or '',
             supp_name,
             )
@@ -82,8 +82,4 @@ class PurchaseOrderLine(orm.Model):
         res['value']['name'] = name
         return res    
        
-            
-        
-
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
