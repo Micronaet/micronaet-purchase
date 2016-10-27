@@ -60,7 +60,8 @@ class PurchaseOrderLine(orm.Model):
             return res
         
         product_pool = self.pool.get('product.product')
-        product_proxy = product_pool.browse(cr, uid, product_id, context=context)
+        product_proxy = product_pool.browse(
+            cr, uid, product_id, context=context)
 
         supp_name = ''
         for suppinfo in product_proxy.seller_ids:

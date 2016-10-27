@@ -20,7 +20,7 @@
                 <tree string="History" editable="bottom">
                     <field name="write_date" readonly="1"/>
                     <field name="write_uid" readonly="1"/>
-                    <field name="date_quotation" readonly="1"/>
+                    <!--<field name="date_quotation" readonly="1"/>-->
                     <field name="price" readonly="1" />
                     <field name="min_quantity" readonly="1" />
                 </tree>
@@ -33,7 +33,7 @@
                 <tree string="History" editable="bottom">
                     <field name="write_date" readonly="1"/>
                     <field name="write_uid" readonly="1"/>
-                    <field name="date_quotation" readonly="1"/>
+                    <!--<field name="date_quotation" readonly="1"/>-->
                     <field name="price" readonly="1" />
                     <field name="min_quantity" readonly="1" />
                 </tree>
