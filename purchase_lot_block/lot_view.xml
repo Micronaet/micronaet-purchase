@@ -24,7 +24,7 @@
                 <label for="standard_price" position="before">
                     <label for="purchase_lot_block" />
                     <field name="purchase_lot_block" />
-                </field>
+                </label>
             </field>
         </record>
     </data>
