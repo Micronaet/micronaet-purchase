@@ -72,8 +72,8 @@ class PurchaseOrderLine(orm.Model):
                 res[item.id]['lot_error'] = True
                 minimum = product_qty // lot
                 status = '[%s:%s]' % (
-                    product_qty * minimum, 
-                    product_qty * (minimum + 1),
+                    lot * minimum, 
+                    lot * (minimum + 1),
                     )
             res[item.id]['lot_info'] = '%s %s' % (lot, status)
         return res

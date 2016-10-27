@@ -21,7 +21,8 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                <field name="standard_price" position="before">
+                <label for="standard_price" position="before">
+                    <label for="purchase_lot_block" />
                     <field name="purchase_lot_block" />
                 </field>
             </field>
