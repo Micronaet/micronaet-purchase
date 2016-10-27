@@ -61,7 +61,11 @@ class PurchaseOrderLine(orm.Model):
         for item in self.browse(cr, uid, ids, context=context):            
             res[item.id] = {'lot_info': '', 'lot_error': False}
             
-            lot = item.product_id.purchase_lot_block
+            if item.product_id.is_pipe: 
+                lot = item.product_id.pipe_min_order
+            else:    
+                lot = item.product_id.purchase_lot_block
+                
             product_qty = item.product_qty
             if not lot or not product_qty:
                 continue                

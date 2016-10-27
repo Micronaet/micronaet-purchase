@@ -31,6 +31,7 @@
         'base',
         'purchase',
         'product',
+        'product_pipes', # TODO manage in different module!!!
         ],
     'init_xml': [],
     'demo': [],
