@@ -62,7 +62,8 @@ class PurchaseOrderLine(orm.Model):
             res[item.id] = {'lot_info': '', 'lot_error': False}
             
             if item.product_id.is_pipe: 
-                lot = item.product_id.pipe_min_order
+                lot = item.product_id.pipe_min_order or \
+                    item.product_id.purchase_lot_block
             else:    
                 lot = item.product_id.purchase_lot_block
                 
