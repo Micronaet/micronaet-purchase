@@ -8,6 +8,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//tree[@string='Pricelist']/field[@name='price']" position="after">
                     <button name="open_history_price" string="History" type="object" />
+                    <field name="write_date" />
                 </xpath>
             </field>
         </record>
