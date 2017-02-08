@@ -7,6 +7,7 @@
             <field name="inherit_id" ref="stock.view_move_picking_tree"/>
             <field name="arch" type="xml">
                  <field name="state" position="after">
+                     <button name="%(action_stock_move_change_qty_wizard_view)d" string="Force change" alert="Update movement and restore in order" type="action" icon="gtk-execute" />
                      <button name="force_unlink_button" string="Force unlink" alert="Delete will be permanently!!" type="object" icon="gtk-cancel" />
                  </field>
             </field>

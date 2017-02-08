@@ -20,7 +20,7 @@
 {
     'name': 'Force stock move delete',
     'version': '0.1',
-    'category': 'Custom',
+    'category': 'Force',
     'description': ''' 
         Set stock move to draft to permit unlink       
         ''',
@@ -34,6 +34,7 @@
     'init_xml': [],
     'demo': [],
     'data': [
+        'wizard/change_qty_view.xml',
         'delete_view.xml',
         ],
     'active': False,
