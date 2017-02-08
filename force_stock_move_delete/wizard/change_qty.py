@@ -56,14 +56,15 @@ class StockMoveChangeQtyWizard(orm.TransientModel):
             context = {}        
         
         wiz_browse = self.browse(cr, uid, ids, context=context)[0]
+
         qty = wiz_browse.qty
-        active_ids = context.get('active_ids')
+        active_id = context.get('active_id')
         
         cr.execute('''
             UPDATE stock_move SET
                 product_uom_qty = %s, product_uos_qty = %s, product_qty = %s
             WHERE id = %s;
-            ''', (qty, qty, qty, active_ids[0]))
+            ''', (qty, qty, qty, active_id))
         # TODO log operations!
         return {
             'type': 'ir.actions.act_window_close'
