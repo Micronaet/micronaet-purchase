@@ -7,8 +7,27 @@
             <field name="inherit_id" ref="stock.view_stock_enter_transfer_details"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='item_ids']/tree/field[@name='quantity']" position="before">
-                    <field name="original_quantity" />
+                    <field name="original_quantity" readonly="1"/>
                 </xpath>
+                <!--Hide button split, not used in this installation:-->
+                <button name="split_quantities" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </button>
+            </field>
+        </record>
+
+        <record id="view_picking_form" model="ir.ui.view">
+            <field name="name">stock.picking.form</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <button name="do_enter_transfer_details" position="after">
+                    <button name="do_enter_transfer_details" states="assigned,partially_available" string="Transfer 0" groups="stock.group_stock_user" type="object" class="oe_highlight" context="{'all_zero':True}"/>
+                </button>
+                <!--Hide button to reverse transfer, not used in this installation:-->
+                <button name="%(stock.act_stock_return_picking)d" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </button>
             </field>
         </record>
     </data>

@@ -51,7 +51,7 @@ class stock_transfer_details(models.TransientModel):
             cr, uid, fields, context=context)
         picking_ids = context.get('active_ids', [])
         active_model = context.get('active_model')
-        all_zero = context.get('all_zero', True) # TODO
+        all_zero = context.get('all_zero', False)
 
         if not picking_ids or len(picking_ids) != 1:
             # Partial Picking Processing may only be done for one picking at a time
