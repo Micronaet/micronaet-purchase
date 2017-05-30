@@ -43,12 +43,39 @@ class StockMove(orm.Model):
     """    
     _inherit = 'stock.move'
     
+    def reopen_sale_order(self, cr, uid, sol_proxy, context=None):
+        '''
+        ''' 
+        # Pool used:
+        sol_pool = self.pool.get('sale.order.line')
+        order_pool = self.pool.get('sale.order')
+        
+        try:
+            # Re-open order line:
+            if sol_proxy.mx_closed:
+                sol_pool.write(cr, uid, sol_proxy.id, {
+                    'mx_closed': False,
+                    }, context=context)
+            # Re-open orer        
+            if sol_proxy.order_id.mx_closed:
+                order_pool.write(
+                    cr, uid, sol_proxy.order_id.id, {
+                        'mx_closed': False,
+                        }, context=context)
+        except:
+            _logger.warning('Sale order line or order not reopened!')                
+            return False
+        return True    
+
     def force_unlink_button(self, cr, uid, ids, context=None):
         ''' Force unlink button
         '''
         assert len(ids) == 1, 'Only one a time'
         move_proxy = self.browse(cr, uid, ids, context=context)[0]
-        
+        # Order closed problem:        
+        self.reopen_sale_order(
+            cr, uid, move_proxy.sale_line_id, context=context)
+            
         _logger.warning('[Pick: %s] Force delete of: %s [%s] q. %s' % (
             move_proxy.picking_id.name or '',
             move_proxy.name,

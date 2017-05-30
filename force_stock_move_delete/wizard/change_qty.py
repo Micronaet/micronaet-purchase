@@ -54,11 +54,16 @@ class StockMoveChangeQtyWizard(orm.TransientModel):
         '''
         if context is None: 
             context = {}        
-        
-        wiz_browse = self.browse(cr, uid, ids, context=context)[0]
 
+        wiz_browse = self.browse(cr, uid, ids, context=context)[0]
         qty = wiz_browse.qty
         active_id = context.get('active_id')
+
+        # Order closed problem:        
+        move_pool = self.pool.get('stock.move')
+        move_proxy = move_pool.browse(cr, uid, active_id, context=context)
+        move_pool.reopen_sale_order(
+            cr, uid, move_proxy.sale_line_id, context=context)
         
         cr.execute('''
             UPDATE stock_move SET
