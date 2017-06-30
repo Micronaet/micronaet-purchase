@@ -72,19 +72,27 @@ class StockMove(orm.Model):
         '''
         assert len(ids) == 1, 'Only one a time'
         move_proxy = self.browse(cr, uid, ids, context=context)[0]
+
+        log_file = os.path.expanduser('~/force_stock_move_delete.log')
+        log_f = open(log_file, 'a')
+        
         # Order closed problem:        
         self.reopen_sale_order(
             cr, uid, move_proxy.sale_line_id, context=context)
             
-        _logger.warning('[Pick: %s] Force delete of: %s [%s] q. %s' % (
+        log_message = '[Pick: %s] Force delete of: %s [%s] q. %s\n' % (
             move_proxy.picking_id.name or '',
             move_proxy.name,
             move_proxy.product_id.default_code,
             move_proxy.product_uom_qty,
-            ))
+            )
+        _logger.warning(log_message)
         self.write(cr, uid, ids, {
-            'state': 'cancel'}, context=context)
-        self.unlink(cr, uid, ids, context=context)    
+            'state': 'cancel',
+            }, context=context)
+        self.unlink(cr, uid, ids, context=context)        
+        log_f.write(log_message)
+        log_f.close()
         return True    
     
     
