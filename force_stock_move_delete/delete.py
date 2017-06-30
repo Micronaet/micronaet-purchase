@@ -87,14 +87,13 @@ class StockMove(orm.Model):
             move_proxy.product_uom_qty,
             )
         _logger.warning(log_message)
+        
         self.write(cr, uid, ids, {
             'state': 'cancel',
             }, context=context)
-        self.unlink(cr, uid, ids, context=context)        
+        self.unlink(cr, uid, ids, context=context)      
+          
         log_f.write(log_message)
         log_f.close()
-        return True    
-    
-    
-    
+        return True
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
