@@ -99,10 +99,13 @@ class StockMoveChangeQtyWizard(orm.TransientModel):
             ''', (active_id, ))
             
         # Log operations!
-        log_message = 'stock_move ID %s product_uom_qty = %s (mx_closed)\n' % (
-            active_id,
-            qty
-            )
+        log_message = \
+            '%s UID: %s Move ID %s product_uom_qty = %s (mx_closed)\n' % (
+                datetime.now(),
+                uid, 
+                active_id,
+                qty
+                )
         _logger.warning(log_message)    
         log_f.write(log_message)        
         log_f.close()

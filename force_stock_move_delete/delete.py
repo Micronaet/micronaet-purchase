@@ -80,9 +80,10 @@ class StockMove(orm.Model):
         self.reopen_sale_order(
             cr, uid, move_proxy.sale_line_id, context=context)
             
-        log_message = '[Pick: %s] Force delete of: %s [%s] q. %s\n' % (
+        log_message = '%s UID: %s Pick: %s] Force delete of: %s q. %s\n' % (
+            datetime.now(),
+            uid,
             move_proxy.picking_id.name or '',
-            move_proxy.name,
             move_proxy.product_id.default_code,
             move_proxy.product_uom_qty,
             )
