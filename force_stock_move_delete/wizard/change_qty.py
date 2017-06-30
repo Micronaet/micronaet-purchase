@@ -55,6 +55,9 @@ class StockMoveChangeQtyWizard(orm.TransientModel):
         if context is None: 
             context = {}        
 
+        log_file = os.path.expanduser('~/force_stock_move_delete.log')
+        log_f = open(log_file, 'a')
+
         wiz_browse = self.browse(cr, uid, ids, context=context)[0]
         qty = wiz_browse.qty
         active_id = context.get('active_id')
@@ -65,12 +68,45 @@ class StockMoveChangeQtyWizard(orm.TransientModel):
         move_pool.reopen_sale_order(
             cr, uid, move_proxy.sale_line_id, context=context)
         
+        # Change quantity:
         cr.execute('''
             UPDATE stock_move SET
                 product_uom_qty = %s, product_uos_qty = %s, product_qty = %s
             WHERE id = %s;
             ''', (qty, qty, qty, active_id))
-        # TODO log operations!
+        
+        # Open sale order line:
+        cr.execute('''
+            UPDATE sale_order_line 
+            SET mx_closed = false
+            WHERE id in (            
+                SELECT sale_line_id 
+                FROM stock_move 
+                WHERE id = %s);
+            ''', (active_id, ))
+        
+        # Open sale order:
+        cr.execute('''
+            UPDATE sale_order 
+            SET mx_closed = 'f'
+            WHERE id in (
+                SELECT distinct order_id 
+                FROM sale_order_line             
+                WHERE id in (
+                    SELECT sale_line_id 
+                    FROM stock_move 
+                    WHERE id = %s));
+            ''', (active_id, ))
+            
+        # Log operations!
+        log_message = 'stock_move ID %s product_uom_qty = %s (mx_closed)\n' % (
+            active_id,
+            qty
+            )
+        _logger.warning(log_message)    
+        log_f.write(log_message)        
+        log_f.close()
+            
         return {
             'type': 'ir.actions.act_window_close'
             }
