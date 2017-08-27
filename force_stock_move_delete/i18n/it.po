@@ -1,0 +1,83 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* force_stock_move_delete
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-07-27 16:25+0000\n"
+"PO-Revision-Date: 2017-08-05 22:23+0100\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"Language: it\n"
+"X-Generator: Poedit 1.6.10\n"
+
+#. module: force_stock_move_delete
+#: view:stock.move.change.qty.wizard:force_stock_move_delete.stock_move_change_qty_wizard_view
+msgid "Cancel"
+msgstr "Annulla"
+
+#. module: force_stock_move_delete
+#: view:stock.move.change.qty.wizard:force_stock_move_delete.stock_move_change_qty_wizard_view
+msgid "Change"
+msgstr "Cambia"
+
+#. module: force_stock_move_delete
+#: model:ir.actions.act_window,name:force_stock_move_delete.action_stock_move_change_qty_wizard_view
+msgid "Change stock qty"
+msgstr "Cambia q.tà magazzino"
+
+#. module: force_stock_move_delete
+#: field:stock.move.change.qty.wizard,create_uid:0
+msgid "Created by"
+msgstr "Creato da"
+
+#. module: force_stock_move_delete
+#: field:stock.move.change.qty.wizard,create_date:0
+msgid "Created on"
+msgstr "Creato il"
+
+#. module: force_stock_move_delete
+#: view:stock.move:force_stock_move_delete.view_stock_move_force_unlink_tree
+msgid "Force change"
+msgstr "Forza cambio"
+
+#. module: force_stock_move_delete
+#: view:stock.move:force_stock_move_delete.view_stock_move_force_unlink_tree
+msgid "Force unlink"
+msgstr "Forza scollegamento"
+
+#. module: force_stock_move_delete
+#: field:stock.move.change.qty.wizard,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: force_stock_move_delete
+#: field:stock.move.change.qty.wizard,write_uid:0
+msgid "Last Updated by"
+msgstr "Aggiornato da"
+
+#. module: force_stock_move_delete
+#: field:stock.move.change.qty.wizard,write_date:0
+msgid "Last Updated on"
+msgstr "Aggiornato il"
+
+#. module: force_stock_move_delete
+#: field:stock.move.change.qty.wizard,qty:0
+msgid "New Qty"
+msgstr "Nuova quantità"
+
+#. module: force_stock_move_delete
+#: model:ir.model,name:force_stock_move_delete.model_stock_move
+msgid "Stock Move"
+msgstr "Movimento di magazzino"
+
+#. module: force_stock_move_delete
+#: view:stock.move.change.qty.wizard:force_stock_move_delete.stock_move_change_qty_wizard_view
+msgid "Wizard"
+msgstr "Wizard"
