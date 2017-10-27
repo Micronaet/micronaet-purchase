@@ -41,56 +41,163 @@ _logger = logging.getLogger(__name__)
 class PricelistPartnerinfoExtraFields(orm.Model):
     ''' Add related fields
     '''
-    _inherit ='pricelist.partnerinfo'
+    _inherit = 'pricelist.partnerinfo'
 
     def _get_parent_information(self, cr, uid, ids, fields, args, 
             context=None):
         ''' Fields function for calculate all value used
         '''
+        product_pool = self.pool.get('product.product')
+        
         res = {}
-        for price in self.browse(cr, uid, ids, context=context)[0]:
+        for price in self.browse(cr, uid, ids, context=context):        
             # Readability:
             supplierinfo = price.suppinfo_id
-            product = supplierinfo.product_tmpl_id # template!!
-            
-            res[price.id] = {            
-                'supplier_id': supplierinfo.name.id, # partner ID
-                'product_id': product.id,
+            template = supplierinfo.product_tmpl_id # template!!
+            product_ids = product_pool.search(cr, uid, [
+                ('product_tmpl_id', '=', template.id),
+                ], context=context)
+            if product_ids:
+                product_id = product_ids[0]
+                default_code = product_pool.browse(
+                    cr, uid, product_id, context=context).default_code
+            else:    
+                product_id = False
+                default_code = False
+
+            res[price.id] = {  
+                # Key:
+                'supplier_id': supplierinfo.name.id, # Partner ID
+                'product_id': product_id,
+                'uom_id': template.uom_id.id,
+
+                # Supplier:
                 'product_supp_name': supplierinfo.product_name,
                 'product_supp_code': supplierinfo.product_code,
-                'product_name': product.name,
-                'product_code': product.default_code,
-                'uom_id': product.uom_id.id,
+
+                # Product:
+                'product_name': template.name,
+                'product_code': default_code,
                 }
         return res
+
+    # -------------------------------------------------------------------------    
+    # reload function:
+    # ------------------------------------------------------------------------- 
+    # product.supplierinfo:   
+    def _reload_price_supplier_id_product_code_and_name(
+            self, cr, uid, ids, context=None):
+        ''' Price change:
+            product.supplierinfo  >> product_code and product_name
+        '''
+        _logger.warning('product.supplierinfo | partner_code or partner_name')
+        item_ids = self.pool.get('pricelist.partnerinfo').search(cr, uid, [
+            ('suppinfo_id', 'in', ids),
+            ], context=context)
+
+        _logger.warning('Change price: %s' % (item_ids, ))
+        return item_ids    
+
+    # product.product:
+    def _reload_price_product_id_code(
+            self, cr, uid, ids, context=None):
+        ''' Price change:
+            product.product  >> default_code
+        '''
+        _logger.warning('product.product > default_code')
+        seller_ids = []
         
+        # Search all seller for refresh:        
+        for product in self.browse(cr, uid, ids, context=context):
+            seller_ids.extend([item.id for item in product.seller_ids])
+        _logger.warning('Change name or code >> seller_ids:  %s' % (
+            seller_ids, ))
+        
+        # Refresh price for all seller:
+        item_ids = self.pool.get('pricelist.partnerinfo').search(cr, uid, [
+            ('suppinfo_id', 'in', seller_ids),
+            ], context=context)
+        _logger.warning('Change price: %s' % (item_ids, ))
+        return item_ids
+    
+    # product.template:
+    def _reload_price_product_id_name(
+            self, cr, uid, ids, context=None):
+        ''' Price change:
+            product.template  >> name
+        '''
+        _logger.warning('product.template > name')
+        seller_ids = []
+
+        # Search product from template:        
+        product_ids = self.pool.get('product.product').search(cr, uid, [
+            ('product_tmpl_id', 'in', ids)], context=context)
+        _logger.warning('Template name: product: %s' % (product_ids, ))
+
+        # Search all seller for refresh:
+        for product in self.browse(cr, uid, product_ids, context=context):
+            seller_ids.extend([item.id for item in product.seller_ids])
+        _logger.warning('Product seller >> seller_ids: %s' % (
+            seller_ids, ))
+        
+        # Refresh price for all seller:
+        item_ids = self.pool.get('pricelist.partnerinfo').search(cr, uid, [
+            ('suppinfo_id', 'in', seller_ids),
+            ], context=context)
+        _logger.warning('Change price: %s' % (item_ids, ))
+        return item_ids    
+            
     _columns = {
         'date_quotation': fields.date('Date quotation'), # TODO delete?
         'write_date': fields.datetime('Write date', readonly=True),
         
-        # TODO change store?:
+        # Fixed ref:
         'supplier_id': fields.function(
             _get_parent_information, method=True, 
             type='many2one', string='Supplier', relation='res.partner',
-            store=True, multi=True),
+            store=True, multi=True),            
         'product_id': fields.function( # XXX template
             _get_parent_information, method=True, store=True, multi=True,
             type='many2one', string='Product', relation='product.template'),
         'uom_id': fields.function(
             _get_parent_information, method=True, store=True, multi=True,
             type='many2one', string='UOM', relation='product.uom'),
+            # TODO store dynamic?
 
+        # Supplier:
         'product_supp_name': fields.function(
-            _get_parent_information, method=True, store=True, multi=True,
-            type='char', size=128, string='Supplier description'),
+            _get_parent_information, method=True, multi=True,
+            type='char', size=128, string='Supplier description',
+            store = {
+                'product.supplierinfo': (
+                    _reload_price_supplier_id_product_code_and_name, 
+                    ['product_name'], 10),
+                }),            
         'product_supp_code': fields.function(
-            _get_parent_information, method=True, store=True, multi=True,
-            type='char', size=64, string='Supplier code'),
+            _get_parent_information, method=True, multi=True,
+            type='char', size=64, string='Supplier code',
+            store = {
+                'product.supplierinfo': (
+                    _reload_price_supplier_id_product_code_and_name, 
+                    ['product_code'], 10),
+                }),
+
+        # Product:
         'product_name': fields.function(
-            _get_parent_information, method=True, store=True, multi=True,
-            type='char', size=80, string='Company product'),
+            _get_parent_information, method=True, multi=True,
+            type='char', size=80, string='Company product',
+            store = {
+                'product.template': (
+                    _reload_price_product_id_name, 
+                    ['name'], 10),
+                }),
         'product_code': fields.function(
-            _get_parent_information, method=True, store=True, multi=True,
-            type='char', size=20, string='Company code'),
+            _get_parent_information, method=True, multi=True,
+            type='char', size=20, string='Company code',
+            store = {
+                'product.product': (
+                    _reload_price_product_id_code, 
+                    ['default_code'], 10),
+                }),
         }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
