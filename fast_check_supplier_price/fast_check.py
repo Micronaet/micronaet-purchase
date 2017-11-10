@@ -43,11 +43,26 @@ class PricelistPartnerinfoExtraFields(orm.Model):
     '''
     _inherit = 'pricelist.partnerinfo'
 
-    def _get_parent_information(self, cr, uid, ids, fields, args, 
+    def update_all_partnerinfo_information(self, cr, uid, ids, context=None):
+        ''' Force all procedure
+        '''        
+        product_pool = self.pool.get('product.product')        
+        product_ids = product_pool.search(cr, uid, [], context=context)
+        for product in product_pool.browse(cr, uid, product_ids, context=context):
+            if not product.seller_ids:
+                continue
+            # force regeneration with saving same default_code
+            product_pool.write(cr, uid, product.id, {
+                'default_code': product.default_code, 
+                }, context=context)        
+        return True
+
+    def get_parent_information(self, cr, uid, ids, fields, args, 
             context=None):
         ''' Fields function for calculate all value used
         '''
-        product_pool = self.pool.get('product.product')
+        _logger.warning('Update price # %s' % len(ids))        
+        product_pool = self.pool.get('product.product')        
         
         res = {}
         for price in self.browse(cr, uid, ids, context=context):        
@@ -78,7 +93,7 @@ class PricelistPartnerinfoExtraFields(orm.Model):
                 # Product:
                 'product_name': template.name,
                 'product_code': default_code,
-                }
+                }                
         return res
 
     # -------------------------------------------------------------------------    
@@ -153,20 +168,20 @@ class PricelistPartnerinfoExtraFields(orm.Model):
         
         # Fixed ref:
         'supplier_id': fields.function(
-            _get_parent_information, method=True, 
+            get_parent_information, method=True, 
             type='many2one', string='Supplier', relation='res.partner',
             store=True, multi=True),            
         'product_id': fields.function( # XXX template
-            _get_parent_information, method=True, store=True, multi=True,
-            type='many2one', string='Product', relation='product.template'),
+            get_parent_information, method=True, store=True, multi=True,
+            type='many2one', string='Product', relation='product.product'),
         'uom_id': fields.function(
-            _get_parent_information, method=True, store=True, multi=True,
+            get_parent_information, method=True, store=True, multi=True,
             type='many2one', string='UOM', relation='product.uom'),
             # TODO store dynamic?
 
         # Supplier:
         'product_supp_name': fields.function(
-            _get_parent_information, method=True, multi=True,
+            get_parent_information, method=True, multi=True,
             type='char', size=128, string='Supplier description',
             store = {
                 'product.supplierinfo': (
@@ -174,7 +189,7 @@ class PricelistPartnerinfoExtraFields(orm.Model):
                     ['product_name'], 10),
                 }),            
         'product_supp_code': fields.function(
-            _get_parent_information, method=True, multi=True,
+            get_parent_information, method=True, multi=True,
             type='char', size=64, string='Supplier code',
             store = {
                 'product.supplierinfo': (
@@ -184,7 +199,7 @@ class PricelistPartnerinfoExtraFields(orm.Model):
 
         # Product:
         'product_name': fields.function(
-            _get_parent_information, method=True, multi=True,
+            get_parent_information, method=True, multi=True,
             type='char', size=80, string='Company product',
             store = {
                 'product.template': (
@@ -192,7 +207,7 @@ class PricelistPartnerinfoExtraFields(orm.Model):
                     ['name'], 10),
                 }),
         'product_code': fields.function(
-            _get_parent_information, method=True, multi=True,
+            get_parent_information, method=True, multi=True,
             type='char', size=20, string='Company code',
             store = {
                 'product.product': (
