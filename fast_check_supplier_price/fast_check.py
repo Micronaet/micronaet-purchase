@@ -170,10 +170,22 @@ class PricelistPartnerinfoExtraFields(orm.Model):
         'supplier_id': fields.function(
             get_parent_information, method=True, 
             type='many2one', string='Supplier', relation='res.partner',
-            store=True, multi=True),            
+            multi=True,
+            # Used to force data, not real store function:
+            store = {
+                'product.product': (
+                    _reload_price_product_id_code, 
+                    ['default_code'], 10),
+                }),
         'product_id': fields.function( # XXX template
-            get_parent_information, method=True, store=True, multi=True,
-            type='many2one', string='Product', relation='product.product'),
+            get_parent_information, method=True, multi=True,
+            type='many2one', string='Product', relation='product.product',
+            # Used to force data, not real store function:
+            store = {
+                'product.product': (
+                    _reload_price_product_id_code, 
+                    ['default_code'], 10),
+                }),
         'uom_id': fields.function(
             get_parent_information, method=True, store=True, multi=True,
             type='many2one', string='UOM', relation='product.uom'),
