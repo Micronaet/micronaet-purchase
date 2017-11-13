@@ -187,9 +187,15 @@ class PricelistPartnerinfoExtraFields(orm.Model):
                     ['default_code'], 10),
                 }),
         'uom_id': fields.function(
-            get_parent_information, method=True, store=True, multi=True,
-            type='many2one', string='UOM', relation='product.uom'),
-            # TODO store dynamic?
+            get_parent_information, method=True, multi=True,
+            type='many2one', string='UOM', relation='product.uom',
+            store = {
+            # Used to force data, not real store function:
+            'product.product': (
+                _reload_price_product_id_code, 
+                ['default_code'], 10),
+            # TODO add extra store
+            }),
 
         # Supplier:
         'product_supp_name': fields.function(
@@ -199,6 +205,10 @@ class PricelistPartnerinfoExtraFields(orm.Model):
                 'product.supplierinfo': (
                     _reload_price_supplier_id_product_code_and_name, 
                     ['product_name'], 10),
+                # Used to force data, not real store function:
+                'product.product': (
+                    _reload_price_product_id_code, 
+                    ['default_code'], 10),
                 }),            
         'product_supp_code': fields.function(
             get_parent_information, method=True, multi=True,
@@ -207,6 +217,10 @@ class PricelistPartnerinfoExtraFields(orm.Model):
                 'product.supplierinfo': (
                     _reload_price_supplier_id_product_code_and_name, 
                     ['product_code'], 10),
+                # Used to force data, not real store function:
+                'product.product': (
+                    _reload_price_product_id_code, 
+                    ['default_code'], 10),
                 }),
 
         # Product:
@@ -217,6 +231,10 @@ class PricelistPartnerinfoExtraFields(orm.Model):
                 'product.template': (
                     _reload_price_product_id_name, 
                     ['name'], 10),
+                # Used to force data, not real store function:
+                'product.product': (
+                    _reload_price_product_id_code, 
+                    ['default_code'], 10),
                 }),
         'product_code': fields.function(
             get_parent_information, method=True, multi=True,
