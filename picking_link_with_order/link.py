@@ -189,7 +189,9 @@ class StockPicking(orm.Model):
                 WS.write(counter, 5, line.order_id.name, format_text)
                 WS.write(counter, 6, line.order_id.partner_id.name, 
                     format_text)
-                WS.write(counter, 7, line.product_uom_qty, format_number)
+                WS.write(counter, 7, 
+                    line.product_uom_qty - line.delivered_qty, 
+                    format_number)
         WB.close()
 
         # ---------------------------------------------------------------------
