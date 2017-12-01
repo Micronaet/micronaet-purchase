@@ -161,8 +161,15 @@ class PricelistPartnerinfoExtraFields(orm.Model):
             ], context=context)
         _logger.warning('Change price: %s' % (item_ids, ))
         return item_ids    
-            
+     
+    def _reload_current_pricelist_forced(self, cr, uid, ids, context=None):
+        ''' Force this
+        '''
+        _logger.warning('Force current: %s' % ids)
+        return ids
+        
     _columns = {
+        'force': fields.boolean('Force related data'),
         'date_quotation': fields.date('Date quotation'), # TODO delete?
         'write_date': fields.datetime('Write date', readonly=True),
         
@@ -173,6 +180,8 @@ class PricelistPartnerinfoExtraFields(orm.Model):
             multi=True,
             # Used to force data, not real store function:
             store = {
+                'pricelist.partnerinfo': (
+                    _reload_current_pricelist_forced, ['force'], 10),
                 'product.product': (
                     _reload_price_product_id_code, 
                     ['default_code'], 10),
@@ -182,6 +191,8 @@ class PricelistPartnerinfoExtraFields(orm.Model):
             type='many2one', string='Product', relation='product.product',
             # Used to force data, not real store function:
             store = {
+                'pricelist.partnerinfo': (
+                    _reload_current_pricelist_forced, ['force'], 10),
                 'product.product': (
                     _reload_price_product_id_code, 
                     ['default_code'], 10),
@@ -190,11 +201,13 @@ class PricelistPartnerinfoExtraFields(orm.Model):
             get_parent_information, method=True, multi=True,
             type='many2one', string='UOM', relation='product.uom',
             store = {
-            # Used to force data, not real store function:
-            'product.product': (
-                _reload_price_product_id_code, 
-                ['default_code'], 10),
-            # TODO add extra store
+                'pricelist.partnerinfo': (
+                    _reload_current_pricelist_forced, ['force'], 10),
+                # Used to force data, not real store function:
+                'product.product': (
+                    _reload_price_product_id_code, 
+                    ['default_code'], 10),
+                # TODO add extra store
             }),
 
         # Supplier:
@@ -202,6 +215,8 @@ class PricelistPartnerinfoExtraFields(orm.Model):
             get_parent_information, method=True, multi=True,
             type='char', size=128, string='Supplier description',
             store = {
+                'pricelist.partnerinfo': (
+                    _reload_current_pricelist_forced, ['force'], 10),
                 'product.supplierinfo': (
                     _reload_price_supplier_id_product_code_and_name, 
                     ['product_name'], 10),
@@ -214,6 +229,8 @@ class PricelistPartnerinfoExtraFields(orm.Model):
             get_parent_information, method=True, multi=True,
             type='char', size=64, string='Supplier code',
             store = {
+                'pricelist.partnerinfo': (
+                    _reload_current_pricelist_forced, ['force'], 10),
                 'product.supplierinfo': (
                     _reload_price_supplier_id_product_code_and_name, 
                     ['product_code'], 10),
@@ -228,6 +245,8 @@ class PricelistPartnerinfoExtraFields(orm.Model):
             get_parent_information, method=True, multi=True,
             type='char', size=80, string='Company product',
             store = {
+                'pricelist.partnerinfo': (
+                    _reload_current_pricelist_forced, ['force'], 10),
                 'product.template': (
                     _reload_price_product_id_name, 
                     ['name'], 10),
@@ -240,6 +259,8 @@ class PricelistPartnerinfoExtraFields(orm.Model):
             get_parent_information, method=True, multi=True,
             type='char', size=20, string='Company code',
             store = {
+                'pricelist.partnerinfo': (
+                    _reload_current_pricelist_forced, ['force'], 10),
                 'product.product': (
                     _reload_price_product_id_code, 
                     ['default_code'], 10),
