@@ -70,6 +70,7 @@ class StockPicking(orm.Model):
                     0, # Total received
                     0, # Total open order
                     [], # SOL lines order
+                    product.name, # Name of product
                     ]
                 product_ids.append(product.id)
 
@@ -164,14 +165,14 @@ class StockPicking(orm.Model):
         # ---------------------------------------------------------------------
         for default_code, data in res.iteritems():
             counter += 1
-            received, order, sol = data
+            received, order, sol, name = data
             
             # -----------------------------------------------------------------
             # Write data row::
             # -----------------------------------------------------------------
             # Header:
             WS.write(counter, 0, default_code, format_text)
-            WS.write(counter, 1, line.product_id.name, format_text)
+            WS.write(counter, 1, name, format_text)
             WS.write(counter, 2, received, format_number)
             WS.write(counter, 3, order, format_number)
             
