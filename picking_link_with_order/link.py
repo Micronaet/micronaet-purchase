@@ -51,18 +51,6 @@ class StockPicking(orm.Model):
     def link_purchase_line_with_sale(self, cr, uid, ids, context=None):
         ''' Link all product with order open product 
         '''
-        # ---------------------------------------------------------------------
-        # Utility: 
-        # ---------------------------------------------------------------------
-        def write_header(current_WS, header):
-            ''' Write header in first line:            
-            '''
-            col = 0
-            for title in header:
-                current_WS.write(0, col, title)
-                col += 1
-            return     
-
         # Pool used:
         sol_pool = self.pool.get('sale.order.line')
         attachment_pool = self.pool.get('ir.attachment')
@@ -101,14 +89,13 @@ class StockPicking(orm.Model):
             ('mx_closed', '=', False),
             ('order_id.mx_closed', '=', False),
             ], context=context)
-
         for sol in sol_pool.browse(cr, uid, sol_ids, context=context):
             product = sol.product_id
             default_code = product.default_code            
-            remain = sol.product_uom_qty - sol.product_delivered_qty
+            remain = sol.product_uom_qty - sol.delivered_qty
             if remain <= 0.0:
                 continue
-                
+
             res[default_code][1] += remain
             res[default_code][2].append(sol)
             
@@ -120,35 +107,88 @@ class StockPicking(orm.Model):
         WB = xlsxwriter.Workbook(filename)
         WS = WB.add_worksheet('Confronto ordini')
 
+        # ---------------------------------------------------------------------
+        # Formats
+        # ---------------------------------------------------------------------            
+        num_format = '#,##0'
+        format_header = WB.add_format({
+            'bold': True, 
+            'font_color': 'black',
+            'font_name': 'Courier 10 pitch', # 'Arial'
+            'font_size': 9,
+            'align': 'center',
+            'valign': 'vcenter',
+            'bg_color': '#cfcfcf', # gray
+            'border': 1,
+            #'text_wrap': True,
+            })
+        format_text = WB.add_format({
+            'font_color': 'black',
+            'font_name': 'Courier 10 pitch',
+            'font_size': 9,
+            'align': 'left',
+            'border': 1,
+            })
+        format_number = WB.add_format({
+            'font_name': 'Courier 10 pitch',
+            'font_size': 9,
+            'align': 'right',
+            'border': 1,
+            'num_format': num_format,
+            })
+
+        # ---------------------------------------------------------------------
+        # Setup col dimension:
+        # ---------------------------------------------------------------------            
+        WS.set_column('A:A', 15)
+        WS.set_column('B:B', 30)
+        WS.set_column('C:D', 10)
+        WS.set_column('E:E', 1)
+        WS.set_column('F:F', 15)
+        WS.set_column('G:G', 30)
+        WS.set_column('H:H', 10)
+
         # Header:
-        header = [
-            'PRODOTTO', 'RICEVUTO', 'ORDINATO', 'Ordine', 'Cliente', 'Q.']        
         counter = 0
-        write_header(WS, header)
+        WS.write(counter, 0, 'PRODOTTO', format_header)
+        WS.write(counter, 1, 'DESCRIZIONE', format_header)
+        WS.write(counter, 2, 'ARRIVATO', format_header)
+        WS.write(counter, 3, 'ORDINATO', format_header)
+        WS.write(counter, 4, '', format_header)
+        WS.write(counter, 5, 'OC', format_header)
+        WS.write(counter, 6, 'CLIENTE', format_header)
+        WS.write(counter, 7, 'Q.', format_header)
 
         # ---------------------------------------------------------------------
         # Prepare price last buy check
         # ---------------------------------------------------------------------
-        counter = 0
         for default_code, data in res.iteritems():
             counter += 1
-
             received, order, sol = data
             
             # -----------------------------------------------------------------
             # Write data row::
             # -----------------------------------------------------------------
             # Header:
-            WS.write(counter, 0, default_code)
-            WS.write(counter, 1, received)
-            WS.write(counter, 2, order)
+            WS.write(counter, 0, default_code, format_text)
+            WS.write(counter, 1, line.product_id.name, format_text)
+            WS.write(counter, 2, received, format_number)
+            WS.write(counter, 3, order, format_number)
             
             # Order detail:
+            if sol: 
+                counter -= 1 # for write in the same line
+            else:
+                WS.write(counter, 5, '', format_text)
+                WS.write(counter, 6, '', format_text)
+                WS.write(counter, 7, '', format_number)
+                   
             for line in sol:
-                WS.write(counter, 3, line.order_id.name)
-                WS.write(counter, 4, line.order_id.partner_id.name)
-                WS.write(counter, 5, line.product_uom_qty)
                 counter += 1
+                WS.write(counter, 5, line.order_id.name, format_text)
+                WS.write(counter, 6, line.order_id.partner_id.name, 
+                    format_text)
+                WS.write(counter, 7, line.product_uom_qty, format_number)
         WB.close()
 
         # ---------------------------------------------------------------------
@@ -160,10 +200,11 @@ class StockPicking(orm.Model):
             'datas_fname': 'confronto_ricezione_ordinato.xlsx',
             'type': 'binary',
             'datas': b64,
-            'partner_id': 1,
+            #'partner_id': 1,
             'res_model': 'res.partner',
             'res_id': 1,
-            }, context=context)        
+            }, context=context)
+            
         return {
             'type' : 'ir.actions.act_url',
             'url': '/web/binary/saveas?model=ir.attachment&field=datas&'
