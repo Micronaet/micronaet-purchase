@@ -31,6 +31,8 @@
         'base',
         'purchase',
         'sale',
+        'stock',
+        'mx_close_order',
         ],
     'init_xml': [],
     'demo': [],
