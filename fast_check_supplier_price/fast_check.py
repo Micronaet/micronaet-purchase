@@ -150,6 +150,7 @@ class PricelistPartnerinfoExtraFields(orm.Model):
         _logger.warning('Template name: product: %s' % (product_ids, ))
 
         # Search all seller for refresh:
+        import pdb; pdb.set_trace()
         for product in self.browse(cr, uid, product_ids, context=context):
             seller_ids.extend([item.id for item in product.seller_ids])
         _logger.warning('Product seller >> seller_ids: %s' % (
