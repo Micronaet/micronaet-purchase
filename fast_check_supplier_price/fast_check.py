@@ -153,11 +153,11 @@ class PricelistPartnerinfoExtraFields(orm.Model):
         for product in self.browse(cr, uid, product_ids, context=context):
             # 13/12/2017: TODO  Test better!
             try:
-                seller_ids = product.seller_ids    
+                current_ids = product.seller_ids    
             except:
                 _logger.error('Seller problem during refresh operation')
                 continue                
-            seller_ids.extend([item.id for item in seller_ids])
+            seller_ids.extend([item.id for item in current_ids])
         _logger.warning('Product seller >> seller_ids: %s' % (
             seller_ids, ))
         
