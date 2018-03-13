@@ -48,7 +48,7 @@ class ProductProduct(orm.Model):
         }
         
     _defaults = {
-        'history_price': lambda *x: True,
+        'history_price': lambda *x: False,
         }
 
 class PurchaseOrder(orm.Model):
