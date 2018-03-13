@@ -48,7 +48,7 @@ class ProductProduct(orm.Model):
         }
         
     _defaults = {
-        'history_price': lambda *x: False,
+        'history_price': lambda *x: True,
         }
 
 class PurchaseOrder(orm.Model):
@@ -130,11 +130,12 @@ class PurchaseOrder(orm.Model):
         return True
     
     _columns = {
-        'history_price': fields.boolean('History price'),
+        'history_price': fields.boolean('Storicizzo prezzo (se confermato)',
+            help='Salva i prezzi nel controllo costi se confermato l\'OF'),
         }
         
     _defaults = {
-        'history_price': lambda *x: True,
+        'history_price': lambda *x: False,
         }
         
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
