@@ -9,7 +9,7 @@
                 <field name="date_order" position="before">
                     <group colspan="4" col="3">
                         <field name="history_price" />
-                        <button name="force_price_product_order" string="Update history now" type="object" colspan="1" alert="ATTENZIONE: Gli attuali prezzi verranno impostati come riferimento ultimo acquisto, confermi?"/>
+                        <button name="force_price_product_order" string="Update history now" type="object" colspan="1" confirm="ATTENZIONE: Gli attuali prezzi verranno impostati come riferimento ultimo acquisto, confermi?"/>
                     </group>     
                 </field>
             </field>
