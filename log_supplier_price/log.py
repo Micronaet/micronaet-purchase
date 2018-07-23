@@ -128,4 +128,16 @@ class PricelistPartnerinfoHistory(orm.Model):
             'res.users', 'History user'),
         'create_date': fields.date('Created'),
         }
+
+class PricelistPartnerinfo(orm.Model):
+    """ Model name: PricelistPartnerinfo
+    """
+    
+    _inherit = 'pricelist.partnerinfo'
+    
+    _columns = {
+        'history_ids': fields.one2many('pricelist.partnerinfo.history', 
+            'pricelist_id', 'History'),
+        }
+            
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
