@@ -139,5 +139,5 @@ class PricelistPartnerinfo(orm.Model):
         'history_ids': fields.one2many('pricelist.partnerinfo.history', 
             'pricelist_id', 'History'),
         }
-            
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
