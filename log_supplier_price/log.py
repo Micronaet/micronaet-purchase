@@ -46,7 +46,7 @@ class PricelistPartnerinfo(orm.Model):
     # --------------------------
     # Overide event for history:
     # --------------------------
-    def write(self, cr, uid, ids, vals, context=None):
+    '''def write(self, cr, uid, ids, vals, context=None):
         """ Update redord(s) comes in {ids}, with new value comes as {vals}
             return True on success, False otherwise
             @param cr: cursor to database
@@ -57,13 +57,12 @@ class PricelistPartnerinfo(orm.Model):
             
             @return: True on success, False otherwise
         """
-    
         #TODO: process before updating resource
         res = super(PricelistPartnerinfo, self).write(
             cr, uid, ids, vals, context=context)
         return res
     
-    '''def write(self, cr, uid, ids, vals, context=None):
+    def write(self, cr, uid, ids, vals, context=None):
         """ Update redord(s) comes in {ids}, with new value comes as {vals}
             return True on success, False otherwise
             @param cr: cursor to database
