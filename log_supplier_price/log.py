@@ -64,31 +64,23 @@ class PricelistPartnerinfo(orm.Model):
         if context is None:
             context = {}
 
-        # Write operation:
         no_history = context.get('without_history', False)
-        if no_history:
-            return True 
-            #super(PricelistPartnerinfo, self).write(
-            #    cr, uid, ids, vals, context=context)
-        else:
-            if 'price' in vals and len(ids) == 1:
-                # Browse current record:
-                current_proxy = self.browse(cr, uid, ids, context=context)[0]
-                # Save history:
-                history_pool = self.pool.get('pricelist.partnerinfo.history')
-                history_pool.create(cr, uid, {
-                    'date_quotation': current_proxy.date_quotation,
-                    'min_quantity': current_proxy.min_quantity,
-                    'price': current_proxy.price,
-                    'pricelist_id': current_proxy.id,     
-                    }, context=context)
+        if not no_history and 'price' in vals and len(ids) == 1:
+            # Browse current record:
+            current_proxy = self.browse(cr, uid, ids, context=context)[0]
 
-                #del(vals['price'])
-    
-            # Update context, no more update:
-            context['without_history'] = True
-            return super(PricelistPartnerinfo, self).write(
-                cr, uid, ids, vals, context=context)
+            # Save history:
+            history_pool = self.pool.get('pricelist.partnerinfo.history')
+            history_pool.create(cr, uid, {
+                'date_quotation': current_proxy.date_quotation,
+                'min_quantity': current_proxy.min_quantity,
+                'price': current_proxy.price,
+                'pricelist_id': current_proxy.id,     
+                }, context=context)
+
+        res = super(PricelistPartnerinfo, self).write(
+            cr, uid, ids, vals, context=context)
+        return res    
     
     # -------------
     # Button event:
