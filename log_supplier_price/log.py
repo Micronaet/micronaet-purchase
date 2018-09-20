@@ -66,6 +66,7 @@ class PricelistPartnerinfo(orm.Model):
             ids = [ids]
 
         # Write anchestor procedure:
+        import pdb; pdb.set_trace()
         if 'recursion' in context:
             return True
 
