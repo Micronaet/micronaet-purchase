@@ -61,12 +61,19 @@ class PricelistPartnerinfo(orm.Model):
         if type(ids) == int:
             ids = [ids]
 
-        context = context or {}
-        #active_model = context.get('active_model', False)
-        without_history = context.get('without_history', False)
+        if context is None:
+            context = {}
 
+        # Write operation:        
+        res = super(PricelistPartnerinfo, self).write(
+            cr, uid, ids, vals, context=context)
+
+        no_history = context.get('without_history', False)
+        if no_history:
+            return res
+            
         # TODO only for one correct?
-        if not without_history and 'price' in vals and len(ids) == 1: 
+        if 'price' in vals and len(ids) == 1:
             # Browse current record:
             current_proxy = self.browse(cr, uid, ids, context=context)[0]
             # Save history:
@@ -78,9 +85,9 @@ class PricelistPartnerinfo(orm.Model):
                 'pricelist_id': current_proxy.id,     
                 }, context=context)
 
-        # Write operation:        
-        return super(PricelistPartnerinfo, self).write(
-            cr, uid, ids, vals, context=context)
+        # Update context, no more update:
+        context['without_history'] = True
+        return res
     
     # -------------
     # Button event:
