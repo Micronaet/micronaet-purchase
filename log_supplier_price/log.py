@@ -77,10 +77,10 @@ class PricelistPartnerinfo(orm.Model):
 
         if context is None:
             context = {}
-        ctx = context.copy()
-        if 'recursion' in ctx:
+        #ctx = context.copy()
+        if 'recursion' in context:
             return res
-        ctx['recursion'] = True
+        context['recursion'] = True
         
         no_history = context.get('without_history', False)
         if not no_history and 'price' in vals and len(ids) == 1:
