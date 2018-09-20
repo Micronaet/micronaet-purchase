@@ -83,6 +83,8 @@ class PricelistPartnerinfo(orm.Model):
                     'pricelist_id': current_proxy.id,     
                     }, context=context)
 
+                del(vals['price'])
+    
             # Update context, no more update:
             context['without_history'] = True
             return super(PricelistPartnerinfo, self).write(
