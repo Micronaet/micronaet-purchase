@@ -66,13 +66,13 @@ class PricelistPartnerinfo(orm.Model):
             ids = [ids]
 
         # Write anchestor procedure:
-        if 'recursion' not in context:
-            res = super(PricelistPartnerinfo, self).write(
+        if 'recursion_update' not in context:
+            context['recursion_update'] = True
+        if context['recursion_update']:    
+            context['recursion_update'] = False
+            return super(PricelistPartnerinfo, self).write(
                 cr, uid, ids, vals, context=context)
 
-        if 'recursion' in context:
-            return res
-            
         # Browse current before update:
         current_proxy = self.browse(cr, uid, ids, context=context)[0]
         history_data = {
@@ -82,15 +82,13 @@ class PricelistPartnerinfo(orm.Model):
             'pricelist_id': current_proxy.id,     
             }
             
-        context['recursion'] = True
-        
         no_history = context.get('without_history', False)
         if not no_history and 'price' in vals and len(ids) == 1:
             # Save history:
             history_pool = self.pool.get('pricelist.partnerinfo.history')
             history_pool.create(cr, uid, history_data, context=context)
-        #res = super(PricelistPartnerinfo, self).write(
-        #    cr, uid, ids, vals, context=context)
+        res = super(PricelistPartnerinfo, self).write(
+            cr, uid, ids, vals, context=context)
         return res   
     
     # -------------
