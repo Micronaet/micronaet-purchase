@@ -67,9 +67,8 @@ class PricelistPartnerinfo(orm.Model):
 
         # Write anchestor procedure:
         if 'recursion' in context:
-            return True
-            #super(PricelistPartnerinfo, self).write(
-            #    cr, uid, ids, vals, context=context)
+            return super(PricelistPartnerinfo, self).write(
+                cr, uid, ids, vals, context=context)
 
         # Browse current before update:
         current_proxy = self.browse(cr, uid, ids, context=context)[0]
