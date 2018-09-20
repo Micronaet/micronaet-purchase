@@ -68,6 +68,7 @@ class PricelistPartnerinfo(orm.Model):
         # Write anchestor procedure:
         if 'recursion_update' not in context:
             context['recursion_update'] = True
+            
         if context['recursion_update']:    
             context['recursion_update'] = False
             return super(PricelistPartnerinfo, self).write(
