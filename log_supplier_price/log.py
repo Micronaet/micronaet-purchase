@@ -66,9 +66,10 @@ class PricelistPartnerinfo(orm.Model):
             ids = [ids]
 
         # Write anchestor procedure:
-        import pdb; pdb.set_trace()
         if 'recursion' in context:
             return True
+            #super(PricelistPartnerinfo, self).write(
+            #    cr, uid, ids, vals, context=context)
 
         # Browse current before update:
         current_proxy = self.browse(cr, uid, ids, context=context)[0]
