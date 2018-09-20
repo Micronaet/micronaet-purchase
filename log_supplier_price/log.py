@@ -65,11 +65,11 @@ class PricelistPartnerinfo(orm.Model):
             context = {}
 
         # Write operation:
-        import pdb; pdb.set_trace()
         no_history = context.get('without_history', False)
         if no_history:
-            return super(PricelistPartnerinfo, self).write(
-                cr, uid, ids, vals, context=context)
+            return True 
+            #super(PricelistPartnerinfo, self).write(
+            #    cr, uid, ids, vals, context=context)
         else:
             if 'price' in vals and len(ids) == 1:
                 # Browse current record:
@@ -83,7 +83,7 @@ class PricelistPartnerinfo(orm.Model):
                     'pricelist_id': current_proxy.id,     
                     }, context=context)
 
-                del(vals['price'])
+                #del(vals['price'])
     
             # Update context, no more update:
             context['without_history'] = True
