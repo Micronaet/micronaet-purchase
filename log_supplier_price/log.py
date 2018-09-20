@@ -59,6 +59,9 @@ class PricelistPartnerinfo(orm.Model):
             
             @return: True on success, False otherwise            
         """
+        if context is None:
+            context = {}
+
         if type(ids) == int:
             ids = [ids]
 
@@ -72,14 +75,11 @@ class PricelistPartnerinfo(orm.Model):
             }
 
         # Write anchestor procedure:
+        if 'recursion' in context:
+            return True
+            
         res = super(PricelistPartnerinfo, self).write(
             cr, uid, ids, vals, context=context)
-
-        if context is None:
-            context = {}
-        #ctx = context.copy()
-        if 'recursion' in context:
-            return res
         context['recursion'] = True
         
         no_history = context.get('without_history', False)
