@@ -46,6 +46,7 @@ class PricelistPartnerinfo(orm.Model):
     # --------------------------
     # Overide event for history:
     # --------------------------
+    
     def write(self, cr, uid, ids, vals, context=None):
         """ Update redord(s) comes in {ids}, with new value comes as {vals}
             return True on success, False otherwise
@@ -61,25 +62,31 @@ class PricelistPartnerinfo(orm.Model):
         if type(ids) == int:
             ids = [ids]
 
-        if context is None:
-            context = {}
+        # Browse current before update:
+        current_proxy = self.browse(cr, uid, ids, context=context)[0]
+        history_data = {
+            'date_quotation': current_proxy.date_quotation,
+            'min_quantity': current_proxy.min_quantity,
+            'price': current_proxy.price,
+            'pricelist_id': current_proxy.id,     
+            }
 
-        no_history = context.get('without_history', False)
-        if not no_history and 'price' in vals and len(ids) == 1:
-            # Browse current record:
-            current_proxy = self.browse(cr, uid, ids, context=context)[0]
-
-            # Save history:
-            history_pool = self.pool.get('pricelist.partnerinfo.history')
-            history_pool.create(cr, uid, {
-                'date_quotation': current_proxy.date_quotation,
-                'min_quantity': current_proxy.min_quantity,
-                'price': current_proxy.price,
-                'pricelist_id': current_proxy.id,     
-                }, context=context)
-
+        # Write anchestor procedure:
         res = super(PricelistPartnerinfo, self).write(
             cr, uid, ids, vals, context=context)
+
+        if context is None:
+            context = {}
+        ctx = context.copy()
+        if 'recursion' in ctx:
+            return res
+        ctx['recursion'] = True
+        
+        no_history = context.get('without_history', False)
+        if not no_history and 'price' in vals and len(ids) == 1:
+            # Save history:
+            history_pool = self.pool.get('pricelist.partnerinfo.history')
+            history_pool.create(cr, uid, history_data, context=context)
         return res    
     
     # -------------
