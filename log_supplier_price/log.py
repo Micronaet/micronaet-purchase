@@ -65,6 +65,7 @@ class PricelistPartnerinfo(orm.Model):
             context = {}
 
         # Write operation:
+        import pdb; pdb.set_trace()
         no_history = context.get('without_history', False)
         if no_history:
             return super(PricelistPartnerinfo, self).write(
