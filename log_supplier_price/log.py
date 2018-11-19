@@ -46,6 +46,7 @@ class PricelistPartnerinfo(orm.Model):
     # --------------------------
     # Overide event for history:
     # --------------------------
+    # TODO RIATTIVARE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     '''def write(self, cr, uid, ids, vals, context=None):
         """ Update redord(s) comes in {ids}, with new value comes as {vals}
             return True on success, False otherwise

@@ -33,6 +33,7 @@
         'sale',
         'stock',
         'mx_close_order',
+        'excel_export',
         ],
     'init_xml': [],
     'demo': [],

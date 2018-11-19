@@ -39,6 +39,134 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 
 _logger = logging.getLogger(__name__)
 
+class PurchaseOrder(orm.Model):
+    """ Model name: Purchase Order
+    """
+    
+    _inherit = 'purchase.order'
+    
+    # -------------------------------------------------------------------------
+    # Button event:
+    # -------------------------------------------------------------------------
+    def link_purchase_line_with_sale(self, cr, uid, ids, context=None):
+        ''' Link all product with order open product 
+        '''
+        # Pool used:
+        sol_pool = self.pool.get('sale.order.line')
+        
+        order = self.browse(cr, uid, ids, context=context)[0]
+        
+        # ---------------------------------------------------------------------
+        # Track product total received in picking:
+        # ---------------------------------------------------------------------
+        res = {}
+        product_ids = []
+        for line in order.order_line:
+            product = line.product_id
+            default_code = product.default_code
+            if default_code not in res:
+                res[default_code] = [
+                    0, # Total received
+                    0, # Total open order
+                    [], # SOL lines order
+                    product.name, # Name of product
+                    ]
+                product_ids.append(product.id)
+
+            res[default_code][0] += line.product_qty
+            
+        # ---------------------------------------------------------------------
+        # Link sale order information:
+        # ---------------------------------------------------------------------
+        sol_ids = sol_pool.search(cr, uid, [
+            # Only this product:
+            ('product_id', 'in', product_ids),
+            
+            # In correct state:
+            ('order_id.state', 'not in', ('cancel', 'draft', 'sent', 'done')),
+            
+            # Not marked as closed:
+            ('mx_closed', '=', False),
+            ('order_id.mx_closed', '=', False),
+            ], context=context)
+        for sol in sol_pool.browse(cr, uid, sol_ids, context=context):
+            product = sol.product_id
+            default_code = product.default_code            
+            remain = sol.product_uom_qty - sol.delivered_qty
+            if remain <= 0.0:
+                continue
+
+            res[default_code][1] += remain
+            res[default_code][2].append(sol)
+            
+        # ---------------------------------------------------------------------
+        # Generate file XLSX
+        # ---------------------------------------------------------------------            
+        excel_pool = self.pool.get('excel.writer')
+        ws_name = 'Confronto ordini'
+        excel_pool.create_worksheet(ws_name)
+
+        # ---------------------------------------------------------------------
+        # Formats
+        # ---------------------------------------------------------------------            
+        excel_pool.set_format()        
+        f_header = excel_pool.get_format('header')
+        f_text = excel_pool.get_format('text')
+        f_number = excel_pool.get_format('number')
+
+        # ---------------------------------------------------------------------
+        # Setup col dimension:
+        # ---------------------------------------------------------------------            
+        excel_pool.column_width(ws_name, [
+            15, 30, 10, 10, 1, 15, 30, 10])
+        row = 0
+        excel_pool.write_xls_line(ws_name, row, [
+            'PRODOTTO',
+            'DESCRIZIONE',
+            'ARRIVATO',
+            'ORDINATO',
+            '',
+            'OC',
+            'CLIENTE',
+            'Q.',
+            ], default_format=f_header)    
+
+        # ---------------------------------------------------------------------
+        # Prepare price last buy check
+        # ---------------------------------------------------------------------
+        for default_code, data in res.iteritems():
+            row += 1
+            received, order, sol, name = data
+            
+            # -----------------------------------------------------------------
+            # Write data row::
+            # -----------------------------------------------------------------
+            excel_pool.write_xls_line(ws_name, row, [
+                # Header:
+                default_code,
+                name,
+                (received, f_number),
+                (order, f_number),                
+                '',
+                '',
+                ('', f_number),
+                ], default_format=f_text)
+            
+            # Order detail:
+            if sol:
+                row -= 1 # for write in the same line
+                   
+            for line in sol:
+                row += 1
+                excel_pool.write_xls_line(ws_name, row, [
+                    line.order_id.name,
+                    line.order_id.partner_id.name, 
+                    (line.product_uom_qty - line.delivered_qty, 
+                        f_number)
+                    ], default_format=f_text, col=5)
+
+        return excel_pool.return_attachment(cr, uid, 'Confronto acquisti')
+
 class StockPicking(orm.Model):
     """ Model name: StockPicking
     """
