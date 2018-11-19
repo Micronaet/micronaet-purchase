@@ -69,7 +69,7 @@ class PurchaseOrder(orm.Model):
                     0, # Total received
                     0, # Total open order
                     [], # SOL lines order
-                    product.name, # Name of product
+                    product, # Product
                     ]
                 product_ids.append(product.id)
 
@@ -118,11 +118,12 @@ class PurchaseOrder(orm.Model):
         # Setup col dimension:
         # ---------------------------------------------------------------------            
         excel_pool.column_width(ws_name, [
-            15, 30, 10, 10, 1, 15, 30, 10])
+            15, 30, 20, 10, 10, 1, 15, 30, 10])
         row = 0
         excel_pool.write_xls_line(ws_name, row, [
             'PRODOTTO',
             'DESCRIZIONE',
+            'COLORE',
             'ARRIVATO',
             'ORDINATO',
             '',
@@ -136,7 +137,7 @@ class PurchaseOrder(orm.Model):
         # ---------------------------------------------------------------------
         for default_code, data in res.iteritems():
             row += 1
-            received, order, sol, name = data
+            received, order, sol, product = data
             
             # -----------------------------------------------------------------
             # Write data row::
@@ -144,7 +145,8 @@ class PurchaseOrder(orm.Model):
             excel_pool.write_xls_line(ws_name, row, [
                 # Header:
                 default_code,
-                name,
+                product.name,
+                product.colour,
                 (received, f_number),
                 (order, f_number),                
                 '',
@@ -163,7 +165,7 @@ class PurchaseOrder(orm.Model):
                     line.order_id.partner_id.name, 
                     (line.product_uom_qty - line.delivered_qty, 
                         f_number)
-                    ], default_format=f_text, col=5)
+                    ], default_format=f_text, col=6)
 
         return excel_pool.return_attachment(cr, uid, 'Confronto acquisti')
 
@@ -198,7 +200,7 @@ class StockPicking(orm.Model):
                     0, # Total received
                     0, # Total open order
                     [], # SOL lines order
-                    product.name, # Name of product
+                    product, # Product
                     ]
                 product_ids.append(product.id)
 
@@ -271,53 +273,57 @@ class StockPicking(orm.Model):
         # ---------------------------------------------------------------------            
         WS.set_column('A:A', 15)
         WS.set_column('B:B', 30)
-        WS.set_column('C:D', 10)
-        WS.set_column('E:E', 1)
-        WS.set_column('F:F', 15)
-        WS.set_column('G:G', 30)
-        WS.set_column('H:H', 10)
+        WS.set_column('C:C', 20)
+        WS.set_column('D:E', 10)
+        WS.set_column('F:F', 1)
+        WS.set_column('G:G', 15)
+        WS.set_column('H:H', 30)
+        WS.set_column('I:I', 10)
+        WS.set_column('J:J', 10)
 
         # Header:
         counter = 0
         WS.write(counter, 0, 'PRODOTTO', format_header)
         WS.write(counter, 1, 'DESCRIZIONE', format_header)
-        WS.write(counter, 2, 'ARRIVATO', format_header)
-        WS.write(counter, 3, 'ORDINATO', format_header)
-        WS.write(counter, 4, '', format_header)
-        WS.write(counter, 5, 'OC', format_header)
-        WS.write(counter, 6, 'CLIENTE', format_header)
-        WS.write(counter, 7, 'Q.', format_header)
+        WS.write(counter, 2, 'COLORE', format_header)
+        WS.write(counter, 3, 'ARRIVATO', format_header)
+        WS.write(counter, 4, 'ORDINATO', format_header)
+        WS.write(counter, 5, '', format_header)
+        WS.write(counter, 6, 'OC', format_header)
+        WS.write(counter, 7, 'CLIENTE', format_header)
+        WS.write(counter, 8, 'Q.', format_header)
 
         # ---------------------------------------------------------------------
         # Prepare price last buy check
         # ---------------------------------------------------------------------
         for default_code, data in res.iteritems():
             counter += 1
-            received, order, sol, name = data
+            received, order, sol, product = data
             
             # -----------------------------------------------------------------
             # Write data row::
             # -----------------------------------------------------------------
             # Header:
             WS.write(counter, 0, default_code, format_text)
-            WS.write(counter, 1, name, format_text)
-            WS.write(counter, 2, received, format_number)
-            WS.write(counter, 3, order, format_number)
+            WS.write(counter, 1, product.name, format_text)
+            WS.write(counter, 2, product.colour, format_text)
+            WS.write(counter, 3, received, format_number)
+            WS.write(counter, 4, order, format_number)
             
             # Order detail:
             if sol: 
                 counter -= 1 # for write in the same line
             else:
-                WS.write(counter, 5, '', format_text)
                 WS.write(counter, 6, '', format_text)
-                WS.write(counter, 7, '', format_number)
+                WS.write(counter, 7, '', format_text)
+                WS.write(counter, 8, '', format_number)
                    
             for line in sol:
                 counter += 1
-                WS.write(counter, 5, line.order_id.name, format_text)
-                WS.write(counter, 6, line.order_id.partner_id.name, 
+                WS.write(counter, 6, line.order_id.name, format_text)
+                WS.write(counter, 7, line.order_id.partner_id.name, 
                     format_text)
-                WS.write(counter, 7, 
+                WS.write(counter, 8, 
                     line.product_uom_qty - line.delivered_qty, 
                     format_number)
         WB.close()
