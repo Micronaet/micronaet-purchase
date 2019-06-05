@@ -46,68 +46,6 @@ class PricelistPartnerinfo(orm.Model):
     # --------------------------
     # Override event for history:
     # --------------------------
-    # TODO RIATTIVARE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    '''def write(self, cr, uid, ids, vals, context=None):
-        """ Update redord(s) comes in {ids}, with new value comes as {vals}
-            return True on success, False otherwise
-            @param cr: cursor to database
-            @param uid: id of current user
-            @param ids: list of record ids to be update
-            @param vals: dict of new values to be set
-            @param context: context arguments, like lang, time zone
-            
-            @return: True on success, False otherwise
-        """
-        #TODO: process before updating resource
-        res = super(PricelistPartnerinfo, self).write(
-            cr, uid, ids, vals, context=context)
-        return res
-    
-    def write(self, cr, uid, ids, vals, context=None):
-        """ Update redord(s) comes in {ids}, with new value comes as {vals}
-            return True on success, False otherwise
-            @param cr: cursor to database
-            @param uid: id of current user
-            @param ids: list of record ids to be update
-            @param vals: dict of new values to be set
-            @param context: context arguments, like lang, time zone
-                > without_history: parameter
-            
-            @return: True on success, False otherwise            
-        """
-        if context is None:
-            context = {}
-
-        if type(ids) == int:
-            ids = [ids]
-
-        # Write anchestor procedure:
-        if 'recursion_update' not in context:
-            context['recursion_update'] = True
-            
-        if context['recursion_update']:    
-            context['recursion_update'] = False
-            return super(PricelistPartnerinfo, self).write(
-                cr, uid, ids, vals, context=context)
-
-        # Browse current before update:
-        current_proxy = self.browse(cr, uid, ids, context=context)[0]
-        history_data = {
-            'date_quotation': current_proxy.date_quotation,
-            'min_quantity': current_proxy.min_quantity,
-            'price': current_proxy.price,
-            'pricelist_id': current_proxy.id,     
-            }
-            
-        no_history = context.get('without_history', False)
-        if not no_history and 'price' in vals and len(ids) == 1:
-            # Save history:
-            history_pool = self.pool.get('pricelist.partnerinfo.history')
-            history_pool.create(cr, uid, history_data, context=context)
-        res = super(PricelistPartnerinfo, self).write(
-            cr, uid, ids, vals, context=context)
-        return res   
-    '''
     def write(self, cr, uid, ids, vals, context=None):
         """Update redord(s) comes in {ids}, with new value comes as {vals}
             return True on success, False otherwise
