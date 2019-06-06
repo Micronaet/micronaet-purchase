@@ -38,6 +38,59 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 
 _logger = logging.getLogger(__name__)
 
+class ProductProduct(orm.Model):
+    ''' Add last price in product list
+    '''
+    _inherit = 'product.product'
+    
+    # Fields function:
+    def _get_last_price_information(self, cr, uid, ids, fields, args, context=None):
+        ''' Fields function for calculate 
+        '''
+        res = {}
+        for product in self.browse(cr, uid, ids, context=context):
+            res[product.id] = {
+                'last_price_price': 0.0,
+                'last_price_date': False,
+                'last_price_supplier': False,
+                'last_price_active': 0,
+                'last_price_unactive': 0,
+                }
+            for supplier in product.seller_ids:            
+                for price in supplier.pricelist_ids:
+                    if not price.is_active: 
+                        res[product.id]['last_price_unactive'] += 1
+                        continue
+                    res[product.id]['last_price_active'] += 1
+                    if not res[product.id]['last_price_date'] or \
+                             res[product.id]['last_price_date'] < \
+                                price.date_quotation:
+                        res[product.id].update({
+                            'last_price_price': price.price,
+                            'last_price_date': price.date_quotation,
+                            'last_price_supplier': supplier.name.id,
+                            })
+        return res
+
+    _columns = {    
+        'last_price_price': fields.function(
+            _get_last_price_information, method=True, 
+            type='float', string='Ultimo prezzo', multi=True, digits=(20, 5),
+            ),
+        'last_price_date': fields.function(
+            _get_last_price_information, method=True, 
+            type='date', string='Ultima data', multi=True), 
+        'last_price_supplier': fields.function(
+            _get_last_price_information, method=True, 
+            type='many2one', string='Fornitore', relation='res.partner', 
+            multi=True), 
+        'last_price_unactive': fields.function(
+            _get_last_price_information, method=True, 
+            type='integer', string='# Disatt.', multi=True), 
+        'last_price_active': fields.function(
+            _get_last_price_information, method=True, 
+            type='integer', string='# Attivi', multi=True), 
+        }                    
 class PricelistPartnerinfo(orm.Model):
     ''' Add button event and override event
     '''

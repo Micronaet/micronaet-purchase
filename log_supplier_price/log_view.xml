@@ -40,6 +40,63 @@
                 </tree>
             </field>
         </record>
+        
+        <record model="ir.ui.view" id="view_product_product_quotation_search">
+            <field name="name">product.product.search</field>
+            <field name="model">product.product</field>
+            <field name="priority" eval="40"/>
+            <field name="arch" type="xml">
+                <search string="Ricerca acquisti" version="7.0">        
+                    <field name="name" />
+                    <field name="default_code" />
+                    <field name="seller_id" filter_domain="[('seller_id.name','=',self)]"/>
+                    <group expand="0" string="Group By...">
+                        <filter name="group_category" string="Categoria" context="{'group_by': 'categ_id'}"/>
+                    </group>                
+                </search>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_product_product_quotation_tree">
+            <field name="name">product.product.tree</field>            
+            <field name="model">product.product</field>
+            <field name="priority" eval="40"/>
+            <field name="arch" type="xml">
+                <tree string="Acquisto prodotti" colors="red:last_price_active==0">        
+                    <field name="default_code"/>
+                    <field name="name"/>
+                    <field name="attribute_value_ids" widget="many2many_tags"/>
+                    <field name="uom_id"/>
+                    <field name="ean13"/>
+                    <field name="last_price_active" />
+                    <field name="last_price_unactive"/>
+                    <field name="last_price_supplier" />
+                    <field name="last_price_date" />
+                    <field name="last_price_price" />
+                    <field name="lst_price"/>
+                    <field name="state" invisible="1"/>
+                    <field name="product_tmpl_id" invisible="1"/>                    
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_product_product_quotation">
+            <field name="name">Prezzi acquisti</field>
+            <field name="res_model">product.product</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_product_product_quotation_tree"/>
+            <field name="search_view_id" ref="view_product_product_quotation_search" />
+            <field name="context">{}</field>
+            <field name="domain">[]</field>
+        </record>        
+        <menuitem 
+            parent="product.menu_products" 
+            id="menu_action_product_product_quotation_sale" 
+            action="action_product_product_quotation"/>
+        <menuitem 
+            parent="purchase.menu_procurement_management" 
+            id="menu_action_product_product_quotation_purchase" 
+            action="action_product_product_quotation"/>
+        
     </data>
 </openerp>
 
