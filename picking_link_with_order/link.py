@@ -329,7 +329,7 @@ class StockPicking(orm.Model):
                 WS.write(counter, 6, line.order_id.name, format_text)
                 WS.write(
                     counter, 7, 
-                    line.date_deadline or line.order_id.date_deadlne or '', 
+                    line.date_deadline or line.order_id.date_deadline or '', 
                     format_text)
                 
                 WS.write(counter, 8, line.order_id.partner_id.name, 
