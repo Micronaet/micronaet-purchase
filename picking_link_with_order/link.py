@@ -118,7 +118,7 @@ class PurchaseOrder(orm.Model):
         # Setup col dimension:
         # ---------------------------------------------------------------------            
         excel_pool.column_width(ws_name, [
-            15, 30, 20, 10, 10, 1, 15, 30, 10])
+            15, 30, 20, 10, 10, 1, 15, 12, 30, 10])
         row = 0
         excel_pool.write_xls_line(ws_name, row, [
             'PRODOTTO',
@@ -128,6 +128,7 @@ class PurchaseOrder(orm.Model):
             'ORDINATO',
             '',
             'OC',
+            'SCADENZA',
             'CLIENTE',
             'Q.',
             ], default_format=f_header)    
@@ -151,6 +152,8 @@ class PurchaseOrder(orm.Model):
                 (order, f_number),                
                 '',
                 '',
+                '',
+                '',
                 ('', f_number),
                 ], default_format=f_text)
             
@@ -162,11 +165,11 @@ class PurchaseOrder(orm.Model):
                 row += 1
                 excel_pool.write_xls_line(ws_name, row, [
                     line.order_id.name,
+                    line.date_deadline or line.order_id.date_deadline or '',
                     line.order_id.partner_id.name, 
                     (line.product_uom_qty - line.delivered_qty, 
                         f_number)
                     ], default_format=f_text, col=6)
-
         return excel_pool.return_attachment(cr, uid, 'Confronto acquisti')
 
 class StockPicking(orm.Model):
@@ -277,9 +280,10 @@ class StockPicking(orm.Model):
         WS.set_column('D:E', 10)
         WS.set_column('F:F', 1)
         WS.set_column('G:G', 15)
-        WS.set_column('H:H', 30)
-        WS.set_column('I:I', 10)
+        WS.set_column('H:H', 12)
+        WS.set_column('I:I', 30)
         WS.set_column('J:J', 10)
+        WS.set_column('K:K', 10)
 
         # Header:
         counter = 0
@@ -290,8 +294,9 @@ class StockPicking(orm.Model):
         WS.write(counter, 4, 'ORDINATO', format_header)
         WS.write(counter, 5, '', format_header)
         WS.write(counter, 6, 'OC', format_header)
-        WS.write(counter, 7, 'CLIENTE', format_header)
-        WS.write(counter, 8, 'Q.', format_header)
+        WS.write(counter, 7, 'SCADENZA', format_header)
+        WS.write(counter, 8, 'CLIENTE', format_header)
+        WS.write(counter, 9, 'Q.', format_header)
 
         # ---------------------------------------------------------------------
         # Prepare price last buy check
@@ -316,14 +321,20 @@ class StockPicking(orm.Model):
             else:
                 WS.write(counter, 6, '', format_text)
                 WS.write(counter, 7, '', format_text)
-                WS.write(counter, 8, '', format_number)
+                WS.write(counter, 8, '', format_text)
+                WS.write(counter, 9, '', format_number)
                    
             for line in sol:
                 counter += 1
                 WS.write(counter, 6, line.order_id.name, format_text)
-                WS.write(counter, 7, line.order_id.partner_id.name, 
+                WS.write(
+                    counter, 7, 
+                    line.date_deadline or line.order_id.date_deadlne or '', 
                     format_text)
-                WS.write(counter, 8, 
+                
+                WS.write(counter, 8, line.order_id.partner_id.name, 
+                    format_text)
+                WS.write(counter, 9, 
                     line.product_uom_qty - line.delivered_qty, 
                     format_number)
         WB.close()

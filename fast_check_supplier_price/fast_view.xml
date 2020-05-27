@@ -10,6 +10,7 @@
             <search string="Search">
                 <field name="supplier_id"/>
                 <field name="product_id"/>
+                <field name="suppinfo_id" />
                 <field name="uom_id"/>
                 <field name="product_supp_code"/>
                 <field name="product_supp_name"/>
@@ -20,6 +21,8 @@
                 <!--<filter name="state" string="Draft state" domain="[('state','=','draft')]"/>-->
                 <group expand="0" string="Group By">
                     <filter name="group_partner" string="Supplier" context="{'group_by': 'supplier_id'}"/>
+                    <filter name="group_suppinfo" string="Fornitore" context="{'group_by': 'suppinfo_id'}"/>
+                    
                     <filter name="group_product" string="Product" context="{'group_by': 'product_id'}"/>
                     <filter name="group_write" string="Write date" context="{'group_by': 'write_date'}"/>
                     <filter name="group_date" string="Quotation date" context="{'group_by': 'date_quotation'}"/>
