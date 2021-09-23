@@ -32,6 +32,7 @@
         'base',
         'product',
         'mrp',
+        'log_supplier_price',
         ],
     'init_xml': [],
     'demo': [],

@@ -170,12 +170,26 @@ class PricelistPartnerinfoHistory(orm.Model):
     _rec_name = 'pricelist_id'
     _order = 'date_quotation desc'
     
+    def _get_original_product_id(self, cr, uid, ids, fields, args, context=None):
+        ''' Fields function for calculate 
+        '''
+        res = {}
+        for record in self.browse(cr, uid, ids, context=context):
+            res[record.id] = record.pricelist_id.product_id.id
+        return res
+            
     _columns = {
         'date_quotation': fields.date('Date quotation'),
         'min_quantity': fields.integer('Min Q.'),
         'price': fields.float('Price', digits=(8, 6)), # more decimal history
+        # todo price_original (per le modifiche)
+        
         'pricelist_id': fields.many2one(
             'pricelist.partnerinfo', 'Pricelist', ondelete='cascade'),
+        'product_id': fields.function(
+            _get_original_product_id, method=True, 
+            type='many2one', string='Prodotto', relation='product.product',
+            store=False),                         
         
         # Show database fields:    
         'create_uid': fields.many2one(
@@ -194,4 +208,3 @@ class PricelistPartnerinfoExtra(orm.Model):
             'pricelist_id', 'History'),
         }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

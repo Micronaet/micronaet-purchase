@@ -32,8 +32,6 @@
             </search>
         </field>
     </record>        
-
-      <!-- Tree -->
     <record id='mrp_component_costs_tree' model='ir.ui.view'>
         <field name='name'>Cost check</field>
         <field name='model'>pricelist.partnerinfo</field>
@@ -58,8 +56,6 @@
             </tree>
         </field>
     </record>
-
-       <!-- Form -->
     <record id='mrp_component_costs_form' model='ir.ui.view'>
         <field name='name'>Controllo costi</field>
         <field name='model'>pricelist.partnerinfo</field>
@@ -79,8 +75,6 @@
             </form>
         </field>
     </record>
-    
-    <!-- Action -->
     <record id="mrp_component_costs_form_action" model="ir.actions.act_window">
         <field name="name">Check cost</field>
         <field name="res_model">pricelist.partnerinfo</field>
@@ -92,6 +86,45 @@
         <field name="help">Videata che facilita il controllo dei prezzi componenti all'arrivo delle fatture</field>
     </record>
 
+    <!--pricelist.partnerinfo.history-->
+    <record model="ir.ui.view" id="view_component_cost_history_search">
+        <field name="name">pricelist.partnerinfo.history.search</field>
+        <field name="model">pricelist.partnerinfo.history</field>
+        <field name="arch" type="xml">
+            <search string="Ricerca in storico" version="7.0">        
+                <field name="pricelist_id" filter_domain="[('partner_id','=',self)]"/>
+                <!--<field name="product_id" filter_domain="[('product_id.default_code','ilike',self)]"/>-->
+                <group expand="0" string="Group By...">
+                    <filter name="group_pricelist" string="Listino" context="{'group_by': 'pricelist_id'}"/>
+                    <!--<filter name="group_product" string="Prodotti" context="{'group_by': 'product_id'}"/>-->
+                </group>                
+            </search>
+        </field>
+    </record>
+    <record id='mrp_component_costs_history_tree' model='ir.ui.view'>
+        <field name='name'>Controllo costi storici</field>
+        <field name='model'>pricelist.partnerinfo.history</field>
+        <field name="arch" type="xml">
+            <tree string="Storico costi" editable="bottom">
+                <field name="create_uid" readonly="1" />                
+                <field name="pricelist_id" readonly="1" />                
+                <field name="product_id" readonly="1" />                
+                <field name="min_quantity" readonly="1" />
+                <field name="date_quotation" readonly="1" />
+                <field name="price" />
+            </tree>
+        </field>
+    </record>
+    <record id="mrp_component_costs_history_action" model="ir.actions.act_window">
+        <field name="name">Storico costi</field>
+        <field name="res_model">pricelist.partnerinfo.history</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="mrp_component_costs_history_tree"/>
+        <field name="context">{}</field>
+        <field name="help">Storico costi modificati</field>
+    </record>
+
     <menuitem
         action="mrp_component_costs_form_action"
         id="mrp_component_costs_form_menu"        
@@ -99,6 +132,13 @@
         sequence="20"
         name="Cost check"
         /> <!--groups="base.group_extended"-->
+    <menuitem
+        action="mrp_component_costs_history_action"
+        id="mrp_component_costs_history_menu"        
+        parent="mrp.menu_mrp_bom"
+        sequence="30"
+        name="History check"
+        />
 
     </data>
 </openerp>
