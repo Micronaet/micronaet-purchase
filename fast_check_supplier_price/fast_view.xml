@@ -2,13 +2,14 @@
 <openerp>
     <data>    
    <!-- COST CONTROL: -->
-   <!-- Search -->
+   <!-- Search -->               
     <record id='mrp_component_costs_search' model='ir.ui.view'>
         <field name='name'>Check cost search</field>
         <field name='model'>pricelist.partnerinfo</field>
         <field name='arch' type='xml'>
             <search string="Search">
                 <field name="supplier_id"/>
+                <field name="suppinfo_id" filter_domain="[('suppinfo_id.name','ilike',self)]"/>
                 <field name="product_id"/>
                 <field name="suppinfo_id" />
                 <field name="uom_id"/>
