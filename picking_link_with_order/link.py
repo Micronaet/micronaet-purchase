@@ -34,6 +34,29 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 _logger = logging.getLogger(__name__)
 
 
+class ProductProduct(orm.Model):
+    """ Update with volume function
+    """
+
+    def _report_product_multipack_extract_info(self, product):
+        """ Extract data from product detail
+            data:
+                'list' for list of elements
+                'volume' volume total
+                'total' volume total
+        """
+        volume = 0.0
+        if product.has_multipackage:
+            for pack in product.multi_pack_ids:
+                for loop in range(0, pack.number or 1):
+                    volume += \
+                        pack.height * pack.width * pack.length / 1000000.0
+        else:
+            volume = \
+                product.pack_l * product.pack_h * product.pack_p / 1000000.0
+        return volume
+
+
 class PurchaseOrder(orm.Model):
     """ Model name: Purchase Order
     """
@@ -182,6 +205,7 @@ class StockPicking(orm.Model):
         """
         # Pool used:
         sol_pool = self.pool.get('sale.order.line')
+        product_pool = self.pool.get('product.product')
         attachment_pool = self.pool.get('ir.attachment')
 
         picking = self.browse(cr, uid, ids, context=context)[0]
@@ -308,12 +332,15 @@ class StockPicking(orm.Model):
             # -----------------------------------------------------------------
             # Write data row::
             # -----------------------------------------------------------------
+            volume = product_pool._report_product_multipack_extract_info(
+                product)
+
             # Header:
             WS.write(counter, 0, default_code, format_text)
             WS.write(counter, 1, product.name, format_text)
             WS.write(counter, 2, product.colour, format_text)
 
-            WS.write(counter, 3, '', format_text)
+            WS.write(counter, 3, volume, format_text)
             WS.write(counter, 4, product.q_x_pack, format_text)
 
             WS.write(counter, 5, received, format_number)
