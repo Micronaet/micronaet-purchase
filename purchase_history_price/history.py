@@ -137,5 +137,5 @@ class PurchaseOrder(orm.Model):
     _defaults = {
         'history_price': lambda *x: False,
         }
-        
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+                      
+

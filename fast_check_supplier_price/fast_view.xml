@@ -40,7 +40,7 @@
         <field name="arch" type="xml">
             <!--TODO put in bom_value_report-->
             <!--<tree string="Controllo costi" colors="blue:has_bom==True">-->
-            <tree string="Controllo costi" editable="bottom">
+            <tree string="Controllo costi" editable="bottom" colors="red:abs(alert_price) &gt; 5">
                 <field name="product_code" />
                 <field name="product_id" readonly="1"/>
                 <field name="uom_id" readonly="1"/>
@@ -50,6 +50,7 @@
                 <field name="product_supp_name" readonly="1"/>
                 <field name="write_date" readonly="1"/>
                 <field name="price"/>
+                <field name="alert_price" />
                 <field name="date_quotation"/><!-- attrs="{'required': [('price', '!=', False)]}"-->
                 <field name="min_quantity" />
                 <!--<field name="has_bom" invisible="1" />-->

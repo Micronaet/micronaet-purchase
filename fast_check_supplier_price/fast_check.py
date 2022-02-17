@@ -38,6 +38,7 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 
 _logger = logging.getLogger(__name__)
 
+
 class PricelistPartnerinfoExtraFields(orm.Model):
     ''' Add related fields
     '''
@@ -174,7 +175,24 @@ class PricelistPartnerinfoExtraFields(orm.Model):
         _logger.warning('Force current: %s' % ids)
         return ids
         
+    def _alert_price_check(self, cr, uid, ids, fields, args, context=None):
+        ''' Fields function for calculate 
+        '''
+        res = {}
+        for pricelist in self.browse(cr, uid, ids, context=context):
+            current = pricelist.price
+            try:
+                last = pricelist.history_ids[0].price
+                res[pricelist.id] = 100.0 * (current -last) / last
+            except:
+                res[pricelist.id] = 0.0
+        return res            
+            
     _columns = {
+        'alert_price': fields.function(
+            _alert_price_check, method=True, 
+            type='float', string='Diff. %'), 
+
         'force': fields.boolean('Force related data'),
         'date_quotation': fields.date('Date quotation'), # TODO delete?
         'write_date': fields.datetime('Write date', readonly=True),

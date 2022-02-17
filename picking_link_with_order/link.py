@@ -277,26 +277,30 @@ class StockPicking(orm.Model):
         WS.set_column('A:A', 15)
         WS.set_column('B:B', 30)
         WS.set_column('C:C', 20)
-        WS.set_column('D:E', 10)
-        WS.set_column('F:F', 1)
-        WS.set_column('G:G', 15)
-        WS.set_column('H:H', 12)
-        WS.set_column('I:I', 30)
-        WS.set_column('J:J', 10)
-        WS.set_column('K:K', 10)
+        WS.set_column('D:G', 10)
+        WS.set_column('H:H', 1)
+        WS.set_column('I:I', 15)
+        WS.set_column('J:J', 12)
+        WS.set_column('K:K', 30)
+        WS.set_column('L:L', 10)
+        WS.set_column('M:M', 10)
 
         # Header:
         counter = 0
         WS.write(counter, 0, 'PRODOTTO', format_header)
         WS.write(counter, 1, 'DESCRIZIONE', format_header)
         WS.write(counter, 2, 'COLORE', format_header)
-        WS.write(counter, 3, 'ARRIVATO', format_header)
-        WS.write(counter, 4, 'ORDINATO', format_header)
-        WS.write(counter, 5, '', format_header)
-        WS.write(counter, 6, 'OC', format_header)
-        WS.write(counter, 7, 'SCADENZA', format_header)
-        WS.write(counter, 8, 'CLIENTE', format_header)
-        WS.write(counter, 9, 'Q.', format_header)
+
+        WS.write(counter, 3, 'VOLUME IMB.', format_header)
+        WS.write(counter, 4, 'PZ X SCAT.', format_header)
+        
+        WS.write(counter, 5, 'ARRIVATO', format_header)
+        WS.write(counter, 6, 'ORDINATO', format_header)
+        WS.write(counter, 7, '', format_header)
+        WS.write(counter, 8, 'OC', format_header)
+        WS.write(counter, 9, 'SCADENZA', format_header)
+        WS.write(counter, 10, 'CLIENTE', format_header)
+        WS.write(counter, 11, 'Q.', format_header)
 
         # ---------------------------------------------------------------------
         # Prepare price last buy check
@@ -312,29 +316,33 @@ class StockPicking(orm.Model):
             WS.write(counter, 0, default_code, format_text)
             WS.write(counter, 1, product.name, format_text)
             WS.write(counter, 2, product.colour, format_text)
-            WS.write(counter, 3, received, format_number)
-            WS.write(counter, 4, order, format_number)
+
+            WS.write(counter, 3, '', format_text)
+            WS.write(counter, 4, product.q_x_pack, format_text)
+            
+            WS.write(counter, 5, received, format_number)
+            WS.write(counter, 6, order, format_number)
             
             # Order detail:
             if sol: 
                 counter -= 1 # for write in the same line
             else:
-                WS.write(counter, 6, '', format_text)
-                WS.write(counter, 7, '', format_text)
                 WS.write(counter, 8, '', format_text)
-                WS.write(counter, 9, '', format_number)
+                WS.write(counter, 9, '', format_text)
+                WS.write(counter, 10, '', format_text)
+                WS.write(counter, 11, '', format_number)
                    
             for line in sol:
                 counter += 1
-                WS.write(counter, 6, line.order_id.name, format_text)
+                WS.write(counter, 8, line.order_id.name, format_text)
                 WS.write(
-                    counter, 7, 
+                    counter, 9, 
                     line.date_deadline or line.order_id.date_deadline or '', 
                     format_text)
                 
-                WS.write(counter, 8, line.order_id.partner_id.name, 
+                WS.write(counter, 10, line.order_id.partner_id.name, 
                     format_text)
-                WS.write(counter, 9, 
+                WS.write(counter, 11, 
                     line.product_uom_qty - line.delivered_qty, 
                     format_number)
         WB.close()
