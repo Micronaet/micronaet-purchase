@@ -184,6 +184,7 @@ class StockPicking(orm.Model):
     def link_purchase_line_with_sale(self, cr, uid, ids, context=None):
         ''' Link all product with order open product 
         '''
+        import pdb; pdb.set_trace()
         # Pool used:
         sol_pool = self.pool.get('sale.order.line')
         attachment_pool = self.pool.get('ir.attachment')
