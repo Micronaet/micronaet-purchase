@@ -72,6 +72,8 @@ class PurchaseOrder(orm.Model):
         """
         # Pool used:
         sol_pool = self.pool.get('sale.order.line')
+        product_pool = self.pool.get('product.product')
+        excel_pool = self.pool.get('excel.writer')
 
         order = self.browse(cr, uid, ids, context=context)[0]
 
@@ -121,7 +123,6 @@ class PurchaseOrder(orm.Model):
         # ---------------------------------------------------------------------
         # Generate file XLSX
         # ---------------------------------------------------------------------
-        excel_pool = self.pool.get('excel.writer')
         ws_name = 'Confronto ordini'
         excel_pool.create_worksheet(ws_name)
 
@@ -137,12 +138,16 @@ class PurchaseOrder(orm.Model):
         # Setup col dimension:
         # ---------------------------------------------------------------------
         excel_pool.column_width(ws_name, [
-            15, 30, 20, 10, 10, 1, 15, 12, 30, 10])
+            15, 30, 20, 10, 10, 10, 10, 1, 15, 12, 30, 10])
         row = 0
         excel_pool.write_xls_line(ws_name, row, [
             'PRODOTTO',
             'DESCRIZIONE',
             'COLORE',
+
+            'VOLUME IMB.',
+            'PEZZI X SCAT.',
+
             'ARRIVATO',
             'ORDINATO',
             '',
@@ -167,6 +172,10 @@ class PurchaseOrder(orm.Model):
                 default_code,
                 product.name,
                 product.colour,
+
+                product_pool._report_product_multipack_extract_info(product),
+                product.q_x_pack,
+
                 (received, f_number),
                 (order, f_number),
                 '',
