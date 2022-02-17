@@ -37,6 +37,7 @@ _logger = logging.getLogger(__name__)
 class ProductProduct(orm.Model):
     """ Update with volume function
     """
+    _inherit = 'product.product'
 
     def _report_product_multipack_extract_info(self, product):
         """ Extract data from product detail
