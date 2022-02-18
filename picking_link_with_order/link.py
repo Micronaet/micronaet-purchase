@@ -197,7 +197,7 @@ class PurchaseOrder(orm.Model):
                     line.order_id.partner_id.name,
                     (line.product_uom_qty - line.delivered_qty,
                         f_number)
-                    ], default_format=f_text, col=6)
+                    ], default_format=f_text, col=8)
         return excel_pool.return_attachment(cr, uid, 'Confronto acquisti')
 
 
